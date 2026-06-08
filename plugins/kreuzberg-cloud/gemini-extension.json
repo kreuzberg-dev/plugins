@@ -1,0 +1,6 @@
+{
+  "name": "kreuzberg-cloud",
+  "description": "Offload document extraction to api.kreuzberg.dev — managed extraction with webhooks, presigned uploads, and usage tracking.",
+  "version": "0.1.0",
+  "contextFileName": "GEMINI.md"
+}

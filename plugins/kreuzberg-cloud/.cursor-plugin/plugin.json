@@ -1,0 +1,21 @@
+{
+  "name": "kreuzberg-cloud",
+  "displayName": "Kreuzberg Cloud",
+  "description": "Offload document extraction to api.kreuzberg.dev — managed extraction with webhooks, presigned uploads, and usage tracking.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Kreuzberg, Inc.",
+    "email": "support@kreuzberg.dev"
+  },
+  "homepage": "https://kreuzberg.dev",
+  "repository": "https://github.com/kreuzberg-dev/plugins",
+  "license": "MIT",
+  "keywords": [
+    "document-intelligence",
+    "extraction",
+    "cloud",
+    "api",
+    "webhooks"
+  ],
+  "skills": "./skills/"
+}

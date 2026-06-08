@@ -1,0 +1,6 @@
+{
+  "name": "kreuzcrawl",
+  "description": "Web crawling and scraping with HTML→Markdown and headless-Chrome fallback.",
+  "version": "0.1.0",
+  "contextFileName": "GEMINI.md"
+}
