@@ -1,9 +1,6 @@
 {
   "files": [
     { "path": "VERSION", "field": "__raw__" },
-    { "path": ".claude-plugin/marketplace.json", "field": "plugins.0.version" },
-    { "path": ".claude-plugin/marketplace.json", "field": "plugins.1.version" },
-    { "path": ".claude-plugin/marketplace.json", "field": "plugins.2.version" },
 
     { "path": "plugins/kreuzberg/.claude-plugin/plugin.json", "field": "version" },
     { "path": "plugins/kreuzberg/.codex-plugin/plugin.json", "field": "version" },

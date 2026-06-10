@@ -3,39 +3,23 @@
   "description": "Curated document-intelligence plugins by Kreuzberg, Inc.",
   "owner": {
     "name": "Kreuzberg, Inc.",
-    "email": "support@kreuzberg.dev",
-    "url": "https://kreuzberg.dev"
+    "email": "support@kreuzberg.dev"
   },
   "plugins": [
     {
       "name": "kreuzberg",
-      "description": "Local document extraction: text, tables, metadata, images from 91+ formats with optional OCR.",
-      "version": "0.1.0",
       "source": "./plugins/kreuzberg",
-      "author": {
-        "name": "Kreuzberg, Inc.",
-        "email": "support@kreuzberg.dev"
-      }
+      "description": "Local document extraction: text, tables, metadata, images from 91+ formats with optional OCR."
     },
     {
       "name": "kreuzcrawl",
-      "description": "Web crawling and scraping with HTML→Markdown and headless-Chrome fallback.",
-      "version": "0.1.0",
       "source": "./plugins/kreuzcrawl",
-      "author": {
-        "name": "Kreuzberg, Inc.",
-        "email": "support@kreuzberg.dev"
-      }
+      "description": "Web crawling and scraping with HTML→Markdown and headless-Chrome fallback."
     },
     {
       "name": "kreuzberg-cloud",
-      "description": "Offload document extraction to api.kreuzberg.dev via REST API and skills. CLI + MCP server arrive in v0.2.0.",
-      "version": "0.1.0",
       "source": "./plugins/kreuzberg-cloud",
-      "author": {
-        "name": "Kreuzberg, Inc.",
-        "email": "support@kreuzberg.dev"
-      }
+      "description": "Offload document extraction to api.kreuzberg.dev via REST API and skills. CLI + MCP server arrive in v0.2.0."
     }
   ]
 }
