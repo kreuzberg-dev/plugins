@@ -118,7 +118,7 @@ Markdown plus metadata, links, images, JSON-LD, and HTTP response info. Read
 - Pass `--respect-robots-txt` on every third-party crawl.
 - Cap `--max-pages` — a runaway BFS can issue tens of thousands of requests.
 - Bump `--rate-limit` for hosts that show signs of stress (5xx, slowdowns).
-- Identify yourself via `--user-agent kreuzcrawl/0.3 (contact@example.com)`.
+- Identify yourself via `--user-agent kreuzcrawl (contact@example.com)`.
 
 ## Common pitfalls
 

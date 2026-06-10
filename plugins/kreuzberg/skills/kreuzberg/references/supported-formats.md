@@ -178,7 +178,7 @@ Kreuzberg supports 91+ file formats across 8 major categories with intelligent f
 
 ### Text Extraction
 
-All 85+ formats support full or partial text extraction. Document structure and encoding are automatically detected.
+All 91+ formats support full or partial text extraction. Document structure and encoding are automatically detected.
 
 ### Metadata Support
 

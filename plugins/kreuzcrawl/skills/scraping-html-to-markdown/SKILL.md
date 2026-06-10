@@ -105,7 +105,7 @@ kreuzcrawl scrape https://blog.example.com/post-123 --format markdown \
 ```bash
 kreuzcrawl scrape https://example.com \
   --proxy http://proxy.internal:3128 \
-  --user-agent "kreuzcrawl/0.3 (research@example.com)" \
+  --user-agent "kreuzcrawl (research@example.com)" \
   --format json
 ```
 

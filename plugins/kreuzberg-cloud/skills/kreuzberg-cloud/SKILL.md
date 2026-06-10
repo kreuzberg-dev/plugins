@@ -9,7 +9,7 @@ description: >-
 license: MIT
 metadata:
   author: kreuzberg-dev
-  version: "1.0"
+  version: "0.1.0"
   repository: https://github.com/kreuzberg-dev/kreuzberg-cloud
 ---
 

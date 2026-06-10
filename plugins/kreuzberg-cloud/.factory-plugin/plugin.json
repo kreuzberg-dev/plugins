@@ -15,7 +15,7 @@
     "cloud",
     "document-intelligence",
     "extraction",
-    "mcp"
+    "webhooks"
   ],
   "brandColor": "#0EA5E9",
   "icon": "./assets/icon.svg",

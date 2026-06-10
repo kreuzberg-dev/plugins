@@ -10,7 +10,7 @@ Install from crates.io:
 cargo install kreuzberg-cli
 ```
 
-Or download pre-built binaries from [GitHub Releases](https://github.com/lukasmwirth/kreuzberg/releases).
+Or download pre-built binaries from [GitHub Releases](https://github.com/kreuzberg-dev/kreuzberg/releases).
 
 ## Commands
 

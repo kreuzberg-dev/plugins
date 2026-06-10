@@ -9,7 +9,7 @@ description: >-
 license: Elastic-2.0
 metadata:
   author: kreuzberg-dev
-  version: "1.0"
+  version: "0.1.0"
   repository: https://github.com/kreuzberg-dev/kreuzberg
 ---
 
@@ -411,7 +411,7 @@ Detailed reference files for specific topics:
 - **[Rust API Reference](references/rust-api.md)** — All functions with feature gates, structs, Cargo.toml examples
 - **[CLI Reference](references/cli-reference.md)** — All commands, flags, config precedence, exit codes
 - **[Configuration Reference](references/configuration.md)** — TOML/YAML/JSON formats, auto-discovery, env vars, full schema
-- **[Supported Formats](references/supported-formats.md)** — All 85+ formats with file extensions and MIME types
+- **[Supported Formats](references/supported-formats.md)** — All 91+ formats with file extensions and MIME types
 - **[Advanced Features](references/advanced-features.md)** — Plugins, embeddings, MCP server, API server, security limits
 - **[Other Language Bindings](references/other-bindings.md)** — Go, Ruby, Java, C#, PHP, Elixir, WASM, Docker
 
