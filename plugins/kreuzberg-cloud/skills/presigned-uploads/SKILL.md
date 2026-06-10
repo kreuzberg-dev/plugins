@@ -15,12 +15,12 @@ start processing.
 - Single file > 50 MB.
 - Batch with aggregate body size > 100 MB.
 - Bandwidth-constrained environments where double-encoding (base64 + TLS
-  + worker) wastes throughput.
+  - worker) wastes throughput.
 - File already lives in S3 / GCS and you can stream rather than buffer.
 
 ## The three steps
 
-```
+```text
 1. POST /v1/uploads/presign  → batch_id + per-file presigned PUT URLs
 2. PUT <upload_url>          → upload each file's bytes directly
 3. POST /v1/uploads/confirm  → start extraction, returns job_ids

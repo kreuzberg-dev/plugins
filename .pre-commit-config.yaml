@@ -1,0 +1,31 @@
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
+default_stages:
+  - pre-commit
+repos:
+  - repo: https://github.com/Goldziher/gitfluff
+    rev: v0.8.0
+    hooks:
+      - id: gitfluff-lint
+        args:
+          - --write
+        stages:
+          - commit-msg
+  - repo: https://github.com/kreuzberg-dev/pre-commit-hooks
+    rev: v2.1.10
+    hooks:
+      - id: ai-rulez-generate
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-merge-conflict
+      - id: check-added-large-files
+      - id: detect-private-key
+      - id: check-json
+      - id: check-yaml
+      - id: check-toml
+      - id: check-case-conflict
+      - id: oxfmt
+      - id: shfmt
+      - id: shellcheck
+      - id: rumdl-fmt

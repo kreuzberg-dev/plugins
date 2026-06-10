@@ -21,7 +21,7 @@ extraction result inline. Pair every submit with either a poll loop
 
 ## Endpoint
 
-```
+```text
 POST https://api.kreuzberg.dev/v1/extract
 Authorization: Bearer $KREUZBERG_API_KEY
 Content-Type: application/json | multipart/form-data

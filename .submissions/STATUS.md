@@ -2,10 +2,10 @@
 
 | Channel | Status | Link |
 |---------|--------|------|
-| ComposioHQ/awesome-claude-plugins | PR open | https://github.com/ComposioHQ/awesome-claude-plugins/pull/277 |
-| punkpeye/awesome-mcp-servers | PR open | https://github.com/punkpeye/awesome-mcp-servers/pull/7633 |
-| jmanhype/awesome-claude-code | PR open | https://github.com/jmanhype/awesome-claude-code/pull/54 |
-| Gemini gallery | Auto-indexed (passive) | https://geminicli.com/extensions (check after 2026-06-15) |
+| ComposioHQ/awesome-claude-plugins | PR open | <https://github.com/ComposioHQ/awesome-claude-plugins/pull/277> |
+| punkpeye/awesome-mcp-servers | PR open | <https://github.com/punkpeye/awesome-mcp-servers/pull/7633> |
+| jmanhype/awesome-claude-code | PR open | <https://github.com/jmanhype/awesome-claude-code/pull/54> |
+| Gemini gallery | Auto-indexed (passive) | <https://geminicli.com/extensions> (check after 2026-06-15) |
 | modelcontextprotocol/registry | Deferred — not zero-touch | needs mcp-publisher CLI + OAuth + per-pkg mcpName |
 | ccplugins/awesome-claude-code-plugins | Skipped — fork-in-repo model | requires hosting plugin contents in their repo |
 | hesreallyhim/awesome-claude-code | Skipped — list reorganization in progress | TOC says TODO |
@@ -16,6 +16,7 @@
 | awesome-opencode/awesome-opencode | Not yet evaluated | opencode discovery |
 
 ## Deferred to Iteration 3
+
 - Claude marketplace form submission (Playwright + claude.ai OAuth)
 - Cursor marketplace form submission
 - Factory Droid PR (need to research Factory-AI/factory-plugins marketplace.json format)
@@ -23,4 +24,5 @@
 - opencode npm publish + awesome-opencode PR
 
 ## Publicity — not started
+
 Per the plan, publicity launches the day after Claude marketplace approves (or 7 days post-submission if no response). Since the Claude form submission is deferred, publicity is also deferred.

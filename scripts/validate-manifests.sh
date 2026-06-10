@@ -22,7 +22,7 @@ while IFS=$'\t' read -r relpath field; do
   fi
 
   if [[ "$field" == "__raw__" ]]; then
-    actual="$(tr -d '[:space:]' < "$abs")"
+    actual="$(tr -d '[:space:]' <"$abs")"
   else
     jq_path="$(dotted_to_jq_path "$field")"
     actual="$(jq -r "$jq_path" "$abs")"

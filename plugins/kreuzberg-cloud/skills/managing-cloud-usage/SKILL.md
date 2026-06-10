@@ -11,7 +11,7 @@ quota for the project.
 
 ## Endpoint
 
-```
+```text
 GET https://api.kreuzberg.dev/v1/usage
 Authorization: Bearer $KREUZBERG_API_KEY
 ```

@@ -24,7 +24,7 @@ of the no-auth mint endpoint.
 
 ## Endpoint
 
-```
+```text
 POST https://api.kreuzberg.dev/v1/sandbox/key
 ```
 

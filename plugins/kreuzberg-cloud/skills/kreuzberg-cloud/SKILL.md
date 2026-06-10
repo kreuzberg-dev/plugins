@@ -238,7 +238,7 @@ and `crawl_config` are optional.
 
 ### `JobStatus` enum
 
-```
+```text
 awaiting_upload | pending | processing | chunking | aggregating
                 | completed | partial_success | failed | cancelled
 ```

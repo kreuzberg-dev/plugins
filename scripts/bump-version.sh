@@ -45,14 +45,14 @@ while IFS=$'\t' read -r relpath field; do
   fi
 
   if [[ "$field" == "__raw__" ]]; then
-    printf '%s\n' "$NEW" > "$abs"
+    printf '%s\n' "$NEW" >"$abs"
     count=$((count + 1))
     continue
   fi
 
   jq_path="$(dotted_to_jq_path "$field")"
   tmp="$(mktemp)"
-  jq --arg v "$NEW" "$jq_path = \$v" "$abs" > "$tmp"
+  jq --arg v "$NEW" "$jq_path = \$v" "$abs" >"$tmp"
   mv "$tmp" "$abs"
   count=$((count + 1))
 done < <(jq -r '.files[] | [.path, .field] | @tsv' "$CONFIG")

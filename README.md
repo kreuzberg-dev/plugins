@@ -118,7 +118,7 @@ Skills are loaded at agent startup. Their descriptions stay in context so agents
 
 ## Layout
 
-```
+```text
 .claude-plugin/
 ├── manifest.json              # plugin registration
 plugins/

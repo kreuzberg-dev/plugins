@@ -10,14 +10,14 @@ config_file="${HOME}/.kreuzberg/cloud.toml"
 has_key=0
 
 if [ -n "${KREUZBERG_API_KEY:-}" ]; then
-    has_key=1
+  has_key=1
 elif [ -f "$config_file" ] && grep -qE '^[[:space:]]*api_key[[:space:]]*=[[:space:]]*"[^"]+"' "$config_file" 2>/dev/null; then
-    has_key=1
+  has_key=1
 fi
 
 # If a key is already configured, emit nothing and exit cleanly.
 if [ "$has_key" -eq 1 ]; then
-    exit 0
+  exit 0
 fi
 
 # No key found — emit a one-line setup reminder via the platform-appropriate
@@ -27,13 +27,13 @@ message='Kreuzberg Cloud: set KREUZBERG_API_KEY or write ~/.kreuzberg/cloud.toml
 
 # Escape string for JSON embedding using bash parameter substitution.
 escape_for_json() {
-    local s="$1"
-    s="${s//\\/\\\\}"
-    s="${s//\"/\\\"}"
-    s="${s//$'\n'/\\n}"
-    s="${s//$'\r'/\\r}"
-    s="${s//$'\t'/\\t}"
-    printf '%s' "$s"
+  local s="$1"
+  s="${s//\\/\\\\}"
+  s="${s//\"/\\\"}"
+  s="${s//$'\n'/\\n}"
+  s="${s//$'\r'/\\r}"
+  s="${s//$'\t'/\\t}"
+  printf '%s' "$s"
 }
 
 escaped=$(escape_for_json "$message")

@@ -22,11 +22,11 @@ Extract text and structure from a single document.
 kreuzberg extract <path> [FLAGS]
 ```
 
-**Positional Arguments**
+## Positional Arguments
 
 - `<path>` — Path to the document file
 
-**Flags**
+## Flags
 
 - `-c, --config <path>` — Path to config file (TOML, YAML, or JSON). Auto-discovers `kreuzberg.{toml,yaml,json}` in current and parent directories if omitted.
 - `--config-json <json>` — Inline JSON configuration (merged after config file, before CLI flags).
@@ -66,7 +66,7 @@ kreuzberg extract <path> [FLAGS]
 - `--cache-namespace <name>` — Cache namespace for tenant isolation.
 - `--cache-ttl-secs <n>` — Per-request cache TTL in seconds.
 
-**Examples**
+## Examples
 
 ```bash
 # Extract with default settings
@@ -105,11 +105,11 @@ Batch extract from multiple documents in parallel.
 kreuzberg batch <paths...> [FLAGS]
 ```
 
-**Positional Arguments**
+## Positional Arguments
 
 - `<paths...>` — One or more document file paths
 
-**Flags**
+## Flags
 
 - `-c, --config <path>` — Path to config file (TOML, YAML, or JSON). Auto-discovers `kreuzberg.{toml,yaml,json}` in current and parent directories if omitted.
 - `--config-json <json>` — Inline JSON configuration (merged after config file, before CLI flags).
@@ -117,12 +117,12 @@ kreuzberg batch <paths...> [FLAGS]
 - `-f, --format <text|json>` — CLI output format (default: `json`). Controls how results display, not extraction content format.
 - All extraction override flags from `extract` are also supported (e.g., `--content-format`, `--ocr`, `--layout`, `--force-ocr`, `--no-cache`, `--quality`, `--acceleration`, etc.). See the `extract` command flags for the full list.
 
-**Notes**
+## Notes
 
 - Batch command defaults to JSON output format (unlike `extract` which defaults to text).
 - Does not support `--mime-type` or `--detect-language` flags.
 
-**Examples**
+## Examples
 
 ```bash
 # Batch extract multiple PDFs
@@ -149,15 +149,15 @@ Identify MIME type of a file.
 kreuzberg detect <path> [FLAGS]
 ```
 
-**Positional Arguments**
+## Positional Arguments
 
 - `<path>` — Path to the file
 
-**Flags**
+## Flags
 
 - `-f, --format <text|json>` — Output format (default: `text`)
 
-**Examples**
+## Examples
 
 ```bash
 # Detect MIME type (text output)
@@ -175,11 +175,11 @@ Display version information.
 kreuzberg version [FLAGS]
 ```
 
-**Flags**
+## Flags
 
 - `-f, --format <text|json>` — Output format (default: `text`)
 
-**Examples**
+## Examples
 
 ```bash
 # Show version as text
@@ -201,12 +201,12 @@ Display cache statistics.
 kreuzberg cache stats [FLAGS]
 ```
 
-**Flags**
+## Flags
 
 - `--cache-dir <path>` — Cache directory (default: `.kreuzberg` in current directory)
 - `-f, --format <text|json>` — Output format (default: `text`)
 
-**Examples**
+## Examples
 
 ```bash
 # Show cache stats
@@ -219,7 +219,7 @@ kreuzberg cache stats --format json
 kreuzberg cache stats --cache-dir /tmp/my-cache
 ```
 
-#### cache clear
+### cache clear
 
 Clear all cached extractions.
 
@@ -227,12 +227,12 @@ Clear all cached extractions.
 kreuzberg cache clear [FLAGS]
 ```
 
-**Flags**
+## Flags
 
 - `--cache-dir <path>` — Cache directory (default: `.kreuzberg` in current directory)
 - `-f, --format <text|json>` — Output format (default: `text`)
 
-**Examples**
+## Examples
 
 ```bash
 # Clear cache
@@ -250,20 +250,20 @@ Start the API server (requires `api` feature).
 kreuzberg serve [FLAGS]
 ```
 
-**Flags**
+## Flags
 
 - `-H, --host <host>` — Host to bind to (e.g., `127.0.0.1` or `0.0.0.0`). CLI arg overrides config file and environment variables.
 - `-p, --port <port>` — Port to bind to. CLI arg overrides config file and environment variables.
 - `-c, --config <path>` — Path to config file (TOML, YAML, or JSON). Auto-discovers `kreuzberg.{toml,yaml,json}` in current and parent directories if omitted.
 
-**Configuration Precedence**
+## Configuration Precedence
 
 1. CLI arguments (`--host`, `--port`)
 2. Environment variables (`KREUZBERG_HOST`, `KREUZBERG_PORT`)
 3. Config file (`[server]` section)
 4. Built-in defaults (`127.0.0.1:8000`)
 
-**Examples**
+## Examples
 
 ```bash
 # Start server with defaults
@@ -287,14 +287,14 @@ Start the Model Context Protocol (MCP) server (requires `mcp` feature).
 kreuzberg mcp [FLAGS]
 ```
 
-**Flags**
+## Flags
 
 - `-c, --config <path>` — Path to config file (TOML, YAML, or JSON). Auto-discovers `kreuzberg.{toml,yaml,json}` in current and parent directories if omitted.
 - `--transport <stdio|http>` — Transport mode (default: `stdio`)
 - `--host <host>` — HTTP host for http transport (default: `127.0.0.1`)
 - `--port <port>` — HTTP port for http transport (default: `8001`)
 
-**Examples**
+## Examples
 
 ```bash
 # Start MCP server with stdio transport

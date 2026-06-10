@@ -17,7 +17,7 @@ Pick webhooks when you can't block, or when the job runs minutes long.
 
 ## Endpoint
 
-```
+```text
 GET https://api.kreuzberg.dev/v1/jobs/{id}
 Authorization: Bearer $KREUZBERG_API_KEY
 ```
@@ -49,7 +49,7 @@ Accepts both extraction job IDs (from `job_ids`) and crawl job IDs (from
 
 ## Status lifecycle
 
-```
+```text
 awaiting_upload  →  pending  →  processing  →  chunking  →  aggregating  →  completed
                                                                           →  partial_success
                                                                           →  failed

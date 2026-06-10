@@ -845,16 +845,14 @@ Output extracted content in Djot markup format (a lighter alternative to Markdow
 
 Run Kreuzberg as an HTTP API server for integration with external services.
 
-```bash
-# Start server on default port 8000
-kreuzberg serve
+    # Start server on default port 8000
+    kreuzberg serve
 
-# Custom host and port
-kreuzberg serve --host 0.0.0.0 --port 9000
+    # Custom host and port
+    kreuzberg serve --host 0.0.0.0 --port 9000
 
-# Enable CORS and other options
-kreuzberg serve --host localhost --port 8000
-```
+    # Enable CORS and other options
+    kreuzberg serve --host localhost --port 8000
 
 **API Endpoints:**
 
@@ -864,21 +862,17 @@ kreuzberg serve --host localhost --port 8000
 
 **Example:**
 
-```bash
-curl -X POST -F "file=@document.pdf" http://localhost:8000/extract
-```
+    curl -X POST -F "file=@document.pdf" http://localhost:8000/extract
 
 ## MCP Server
 
 Run Kreuzberg as a Model Context Protocol server for integration with Claude and other AI models.
 
-```bash
-# Start MCP server with stdio transport
-kreuzberg mcp --transport stdio
+    # Start MCP server with stdio transport
+    kreuzberg mcp --transport stdio
 
-# Start MCP server with HTTP transport
-kreuzberg mcp --transport http --host 127.0.0.1 --port 8001
-```
+    # Start MCP server with HTTP transport
+    kreuzberg mcp --transport http --host 127.0.0.1 --port 8001
 
 The MCP server exposes extraction functions to AI models, allowing them to process documents directly.
 
@@ -964,12 +958,10 @@ Extraction results are cached by default to improve performance on repeated extr
 
 **CLI Cache Management:**
 
-```bash
-# View cache statistics
-kreuzberg cache stats
+    # View cache statistics
+    kreuzberg cache stats
 
-# Clear all cached results
-kreuzberg cache clear
-```
+    # Clear all cached results
+    kreuzberg cache clear
 
 Caching is transparent and automatic—same input produces cached output instantly on subsequent extractions.

@@ -1,9 +1,9 @@
 # punkpeye/awesome-mcp-servers
 
-- Upstream: https://github.com/punkpeye/awesome-mcp-servers
-- Fork: https://github.com/Goldziher/awesome-mcp-servers
+- Upstream: <https://github.com/punkpeye/awesome-mcp-servers>
+- Fork: <https://github.com/Goldziher/awesome-mcp-servers>
 - Branch: `add-kreuzberg-plugins`
-- PR: https://github.com/punkpeye/awesome-mcp-servers/pull/7633
+- PR: <https://github.com/punkpeye/awesome-mcp-servers/pull/7633>
 - Submitted: 2026-06-08
 - Servers entered:
   - `kreuzberg-dev/kreuzberg` in "Search & Data Extraction" (🦀 🏠 🍎 🪟 🐧)
