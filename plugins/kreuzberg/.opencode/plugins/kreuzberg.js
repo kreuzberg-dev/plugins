@@ -55,7 +55,8 @@ function runCli(args, context) {
       if (error.code === "ENOENT") {
         resolve({
           title: "kreuzberg CLI not found",
-          output: "Install the kreuzberg CLI with `brew install kreuzberg-dev/tap/kreuzberg` or `cargo install kreuzberg-cli`.",
+          output:
+            "Install the kreuzberg CLI with `brew install kreuzberg-dev/tap/kreuzberg`, or run it via `npx kreuzberg` / `uvx --from kreuzberg kreuzberg`.",
           metadata: { exitCode: 127, command: "kreuzberg", subcommand: args[0] },
         });
         return;
@@ -65,7 +66,9 @@ function runCli(args, context) {
     child.on("close", (exitCode, signal) => {
       const stdoutText = Buffer.concat(stdout).toString("utf8").trim();
       const stderrText = Buffer.concat(stderr).toString("utf8").trim();
-      const output = [stdoutText, stderrText && `stderr:\n${stderrText}`].filter(Boolean).join("\n\n");
+      const output = [stdoutText, stderrText && `stderr:\n${stderrText}`]
+        .filter(Boolean)
+        .join("\n\n");
 
       resolve({
         title: exitCode === 0 ? `kreuzberg ${args[0]}` : `kreuzberg ${args[0]} failed`,
@@ -84,7 +87,8 @@ function runCli(args, context) {
 export const KreuzbergPlugin = async () => ({
   tool: {
     kreuzberg_extract: tool({
-      description: "Extract text, tables, metadata, and images from a local document with the kreuzberg CLI.",
+      description:
+        "Extract text, tables, metadata, and images from a local document with the kreuzberg CLI.",
       args: {
         path: schema.string().min(1).describe("Path to the local document."),
         format: wireFormat,

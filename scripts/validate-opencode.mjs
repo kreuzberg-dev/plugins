@@ -20,6 +20,16 @@ const plugins = [
     exportName: "KreuzbergCloudPlugin",
     tools: [],
   },
+  {
+    path: "plugins/html-to-markdown/.opencode/plugins/html-to-markdown.js",
+    exportName: "HtmlToMarkdownPlugin",
+    tools: ["html_to_markdown_convert", "html_to_markdown_fetch_url", "html_to_markdown_extract"],
+  },
+  {
+    path: "plugins/tree-sitter-language-pack/.opencode/plugins/tree-sitter-language-pack.js",
+    exportName: "TreeSitterLanguagePackPlugin",
+    tools: ["tspack_parse", "tspack_process", "tspack_info"],
+  },
 ];
 
 for (const plugin of plugins) {
@@ -37,7 +47,9 @@ for (const plugin of plugins) {
   const expected = plugin.tools.toSorted();
 
   if (JSON.stringify(actual) !== JSON.stringify(expected)) {
-    throw new Error(`${plugin.path} tools ${JSON.stringify(actual)} != ${JSON.stringify(expected)}`);
+    throw new Error(
+      `${plugin.path} tools ${JSON.stringify(actual)} != ${JSON.stringify(expected)}`,
+    );
   }
 
   for (const name of expected) {

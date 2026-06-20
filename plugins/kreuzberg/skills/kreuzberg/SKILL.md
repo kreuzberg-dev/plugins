@@ -56,8 +56,14 @@ kreuzberg = { version = "4", features = ["tokio-runtime"] }
 ### CLI
 
 ```bash
-# Download from GitHub releases, or:
-cargo install kreuzberg-cli
+brew install kreuzberg-dev/tap/kreuzberg
+# or run without a persistent install (the CLI proxy package self-installs the binary):
+npx kreuzberg-cli --help
+uvx --from kreuzberg-cli kreuzberg --help
+# or download a prebuilt binary from the latest GitHub release:
+#   https://github.com/kreuzberg-dev/kreuzberg/releases/latest
+# or build from source:
+cargo install --git https://github.com/kreuzberg-dev/kreuzberg kreuzberg-cli
 ```
 
 ## Quick Start
@@ -210,8 +216,8 @@ backend = "tesseract"
 language = "eng"
 
 [chunking]
-max_chars = 1000
-max_overlap = 200
+max_characters = 1000
+overlap = 200
 
 [pdf_options]
 passwords = ["secret123"]
@@ -381,7 +387,7 @@ match extract_file("file.pdf", None, &config).await {
 5. **CLI --format vs --content-format**: `--format` controls CLI output (text/json). `--content-format` controls content format (plain/markdown/djot/html). The older `--output-format` is a deprecated alias that still works but prints a warning — prefer `--content-format`.
 6. **Node.js extractFile signature**: `extractFile(path, mimeType?, config?)` — mimeType is the second arg (pass `null` to skip).
 7. **Python detect_mime_type**: The function for detecting from bytes is `detect_mime_type(data)`. For paths use `detect_mime_type_from_path(path)`.
-8. **Config file field names**: Use snake_case in TOML/YAML/JSON config files (e.g., `max_chars`, `max_overlap`, `pdf_options`).
+8. **Config file field names**: Use snake_case in TOML/YAML/JSON config files. The Rust `[chunking]` fields are `max_characters` and `overlap` (with `max_chars` / `max_overlap` accepted as aliases). Other fields use names like `output_format`, `pdf_options`.
 
 ## Supported Formats (Summary)
 
@@ -414,6 +420,17 @@ Detailed reference files for specific topics:
 - **[Supported Formats](references/supported-formats.md)** — All 91+ formats with file extensions and MIME types
 - **[Advanced Features](references/advanced-features.md)** — Plugins, embeddings, MCP server, API server, security limits
 - **[Other Language Bindings](references/other-bindings.md)** — Go, Ruby, Java, C#, PHP, Elixir, WASM, Docker
+
+## Related skills
+
+Task-focused sibling skills go deeper than this overview:
+
+- **extracting-with-ocr** — OCR backends, language packs, force-OCR, tuning.
+- **extracting-tables** — layout-aware table detection and table models.
+- **chunking** — chunk size/overlap, markdown/yaml/semantic chunkers, the `chunk` command.
+- **extracting-keywords** — YAKE/RAKE keywords, language detection, the `embed` command.
+- **batch-extraction** — the `batch` command, `--file-configs`, parallelism, error recovery.
+- **picking-a-format** — choosing `--format` / `--content-format` per consumer.
 
 Full documentation: <https://docs.kreuzberg.dev>
 GitHub: <https://github.com/kreuzberg-dev/kreuzberg>

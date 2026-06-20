@@ -7,9 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- MCP server transport for kreuzberg-cloud (target: v0.2.0)
-- Additional skills for advanced extraction scenarios
-- Support for more agent harnesses
+- MCP server transport for kreuzberg-cloud
+- html-to-markdown and tree-sitter-language-pack MCP servers (plugin wiring is in place; the upstream `mcp` subcommands land in their next releases)
+
+## [0.2.0] - 2026-06-20
+
+### Added
+
+- **html-to-markdown** plugin: fast, lossless HTML→Markdown with metadata, tables, and document-structure extraction
+- **liter-llm** plugin: universal LLM API client for 143 providers (chat, streaming, tools, embeddings, search, OCR) plus an OpenAI-compatible proxy and an MCP server
+- **tree-sitter-language-pack** plugin: parse and extract code intelligence from 300+ languages (structure, imports, symbols, syntax-aware chunking)
+- Auto-installing MCP launchers (existing binary → npx → uvx → brew → checksum-verified prebuilt download) for kreuzberg, kreuzcrawl, and liter-llm; CLI/MCP wiring for html-to-markdown and tree-sitter-language-pack
+- New skills — kreuzberg: `chunking`, `batch-extraction`, `extracting-keywords`; kreuzcrawl: `mapping-urls`, `automating-the-browser`, `serving-the-api`; kreuzberg-cloud: `versioning-documents`
+- `<tool>-cli` npm/PyPI proxy packages so `npx <tool>-cli` / `uvx <tool>-cli` install and run each CLI
+
+### Changed
+
+- Standardized skill conventions, frontmatter, README structure, and manifest capabilities across all plugins (documented in CONTRIBUTING.md)
+- Corrected install documentation to the real channels (brew tap, npx/uvx, prebuilt release binaries)
 
 ## [0.1.0] - 2026-06-08
 

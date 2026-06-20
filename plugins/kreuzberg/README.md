@@ -23,9 +23,17 @@ Install the `kreuzberg` CLI:
 
 ```bash
 brew install kreuzberg-dev/tap/kreuzberg
-# or
-cargo install kreuzberg-cli
+# or run it without a persistent install (the CLI proxy package self-installs the binary):
+npx kreuzberg-cli --help
+uvx --from kreuzberg-cli kreuzberg --help
+# or download a prebuilt binary from the latest GitHub release:
+#   https://github.com/kreuzberg-dev/kreuzberg/releases/latest
+# or build from source:
+cargo install --git https://github.com/kreuzberg-dev/kreuzberg kreuzberg-cli
 ```
+
+The Python (`kreuzberg`) and Node (`@kreuzberg/node`) packages are language
+SDKs/bindings, not the CLI.
 
 OCR ships with Tesseract by default. Install language packs for non-English documents:
 
@@ -41,6 +49,9 @@ sudo apt install tesseract-ocr-*   # Debian/Ubuntu
 | **kreuzberg** | Extract text, tables, metadata, and images from 91+ document formats (PDF, Office, images, HTML, email, archives, academic) using Kreuzberg. Use when writing code that calls Kreuzberg APIs in Python, Node.js/TypeScript, Rust, or CLI. Covers installation, extraction (sync/async), configuration (OCR, chunking, output format), batch processing, error handling, and plugins. |
 | **extracting-with-ocr** | Use when extracting text from scanned PDFs, photographed pages, or images that have no embedded text layer. Covers OCR backends, language packs, force-OCR, and performance tuning. |
 | **extracting-tables** | Use when extracting tabular data from PDFs, spreadsheets, or images. Covers layout-aware table detection, table model selection, output formats (markdown / JSON cells), and known limits. |
+| **chunking** | Use when splitting extracted text into chunks for LLM context windows or RAG ingestion. Covers chunk size, overlap, markdown/yaml/semantic chunkers, tokenizer-based sizing, and the standalone `chunk` command. |
+| **extracting-keywords** | Use when extracting keywords (YAKE/RAKE), detecting document language, or generating embeddings for RAG and search. Covers the keyword config, `--detect-language`, and the standalone `embed` command. |
+| **batch-extraction** | Use when extracting from many files at once with shared config, bounded parallelism, per-file overrides, and error recovery. Covers the `batch` command, `--file-configs`, `--max-concurrent`, and output layout. |
 | **picking-a-format** | Use when choosing an output format for extracted documents — text, markdown, djot, html, or JSON. Maps consumer (LLM, parser, archive) to the right `--format` / `--content-format` pair. |
 
 **Reference materials** (linked from the `kreuzberg` skill):

@@ -35,8 +35,18 @@ The plugin shells out to a `kreuzcrawl` binary on `PATH`. Install one of:
 
 ```bash
 brew install kreuzberg-dev/tap/kreuzcrawl
-cargo install kreuzcrawl-cli
+# or run without a persistent install (the CLI proxy package self-installs the binary):
+npx kreuzcrawl-cli --help
+uvx --from kreuzcrawl-cli kreuzcrawl --help
+# or build from source:
+cargo install --git https://github.com/kreuzberg-dev/kreuzcrawl kreuzcrawl-cli --features all
 ```
+
+The `serve` and `mcp` subcommands are gated behind non-default cargo features
+(`api` and `mcp`). The Homebrew tap is built with all features, so both
+subcommands work out of the box. A from-source build must pass
+`--features mcp` (and `--features api` for `serve`), or `--features all`, to
+include them.
 
 Verify:
 
@@ -55,8 +65,8 @@ kreuzcrawl scrape <url>     # single page → JSON or Markdown
 kreuzcrawl crawl <url...>   # follow links, BFS, depth-bounded
 kreuzcrawl map <url>        # enumerate URLs via sitemaps + link extraction
 kreuzcrawl interact <url>   # browser actions: click, type, scroll
-kreuzcrawl mcp              # MCP server (stdio) — auto-registered
-kreuzcrawl serve            # REST API server (optional `api` feature)
+kreuzcrawl mcp              # MCP server (stdio) — auto-registered (`mcp` feature)
+kreuzcrawl serve            # REST API server (`api` feature)
 ```
 
 Batch behaviour is built into `crawl`: pass multiple seed URLs and the engine
@@ -119,12 +129,15 @@ crawl or to feed URLs into another tool.
 ```bash
 kreuzcrawl interact https://example.com \
   --actions '[{"type":"click","selector":"#load-more"},
-              {"type":"wait","duration_ms":500}]'
+              {"type":"wait","milliseconds":500},
+              {"type":"scrape"}]'
 ```
 
-Action types include `click`, `type`, `select`, `scroll`, `wait`,
-`wait_for_selector`, and `screenshot`. The result wraps the final HTML
-under `interaction.final_html`.
+Action types are `click`, `type`, `press`, `scroll`, `wait`, `screenshot`,
+`executeJs`, and `scrape` (to wait for an element, use `wait` with a
+`selector` field). The result wraps the final HTML under
+`interaction.final_html`. See the `automating-the-browser` skill for the full
+action schema and limits.
 
 ## MCP server
 
@@ -132,8 +145,11 @@ When this plugin is installed in a Claude Code / Codex / Cursor / Gemini /
 opencode harness, the MCP server is auto-registered:
 
 ```text
-kreuzcrawl mcp --transport stdio
+kreuzcrawl mcp
 ```
+
+`mcp` is a stdio-transport server and takes no arguments. It requires a binary
+built with the `mcp` feature (see Installation).
 
 Prefer MCP tools over shelling out when both are available:
 
@@ -187,5 +203,11 @@ and read `result.markdown.content`.
   caps, concurrency, rate limits, and domain scoping.
 - `skills/scraping-html-to-markdown/SKILL.md` — single-page rendering, the
   Markdown output shape, and common pitfalls.
+- `skills/mapping-urls/SKILL.md` — `map`: sitemap + link URL discovery,
+  filtering, and seeding a crawl.
+- `skills/automating-the-browser/SKILL.md` — `interact`: the full scripted
+  action schema, limits, and result shape.
+- `skills/serving-the-api/SKILL.md` — `serve`: the Firecrawl-v1-compatible
+  REST API server and its endpoints.
 - `skills/headless-fallback/SKILL.md` — when and how to force the browser
   backend.

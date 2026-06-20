@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "kreuzcrawl": {
-      "command": "kreuzcrawl",
+      "command": "${CLAUDE_PLUGIN_ROOT}/scripts/mcp-launch.sh",
       "args": ["mcp"]
     }
   }

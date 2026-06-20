@@ -22,17 +22,66 @@ For other harnesses, use the equivalent self-hosted marketplace install command 
 
 ## Adding a Skill
 
-Create a new skill in `plugins/<plugin-name>/skills/<skill-name>/SKILL.md`. Start with frontmatter:
+Create a new skill in `plugins/<plugin-name>/skills/<skill-name>/SKILL.md`. Use a **gerund-task**
+directory name (`extracting-tables`, `crawling-a-site`, `running-the-proxy`).
+
+A **secondary** skill carries only `name` + `description`, and the description **starts with
+"Use when …"**:
 
 ```yaml
 ---
-name: "Extract tables"
-description: "Extract structured tables from documents"
-tags: ["extraction", "tables"]
+name: extracting-tables
+description: "Use when extracting tabular data from PDFs, spreadsheets, or images. Covers layout-aware detection, model selection, and output formats."
 ---
 ```
 
-Add the skill content below. Keep it concise — the description is used by agents to decide when to invoke your skill. Refer to existing SKILL.md files as templates.
+The **main** skill (`skills/<plugin-name>/SKILL.md`) additionally carries `license` and a `metadata`
+block:
+
+```yaml
+---
+name: kreuzberg
+description: "<capability summary>. Use when …"
+license: MIT
+metadata:
+  author: kreuzberg-dev
+  version: "0.1.0"
+  repository: https://github.com/kreuzberg-dev/<tool>
+---
+```
+
+Keep the body concise and accurate to the tool's **real** CLI/API surface — never document a flag,
+subcommand, or MCP tool that does not exist in the source. Refer to existing SKILL.md files as
+templates.
+
+## Plugin Standard
+
+Every plugin conforms to the same shape:
+
+1. **Skills** — one main skill (full capability map, install, a "when to use X vs Y" decision table,
+   MCP-vs-CLI guidance) plus gerund-task secondary skills. Frontmatter as above.
+2. **MCP launcher** — if the tool ships an MCP server, the plugin auto-installs the binary via
+   `scripts/mcp-launch.sh` (resolution order: a working binary on PATH/`$PLUGIN_ROOT/bin` →
+   prebuilt download from the tool's **latest** GitHub release, checksum-verified where the release
+   publishes checksums and otherwise TLS-only with a stderr warning → `brew install` → `cargo
+   install`). All diagnostics go to **stderr** (stdout is the MCP channel). `.claude-plugin/mcp.json`
+   points its `command` at `${CLAUDE_PLUGIN_ROOT}/scripts/mcp-launch.sh`. Never key the download off
+   the plugin version — the plugin version and the tool version are independent.
+3. **Install** — the main skill + README document install via brew / cargo / npx / uvx as the tool
+   actually supports them (verify against the tool repo). Tools without an MCP server shell out to
+   the CLI; the opencode runner surfaces an install hint on `ENOENT`.
+4. **Manifests** — six harness manifests (`.claude-plugin/` (+ `mcp.json` when there's an MCP
+   server), `.codex-plugin/`, `.cursor-plugin/`, `.factory-plugin/`, `.github/plugin/`,
+   `gemini-extension.json`), plus `README.md`, `GEMINI.md`, `assets/`, and an opencode
+   `.opencode/plugins/<name>.js` + `package.json` where the tool has a CLI. `capabilities`:
+   `Read` = fetch/parse/extract; add `Write` only when the plugin's tools write/submit/modify.
+5. **README order** — Install → Skills (table matching `skills/`) → MCP/CLI → Configuration →
+   Examples. Marketplace one-liners describe what the plugin does today; keep status/roadmap notes
+   in the README, not the marketplace description.
+6. **Registration** — add the plugin to both `.claude-plugin/marketplace.json` and
+   `.github/plugin/marketplace.json`, list its version-bearing manifests in `.version-bump.json`,
+   and (if it ships an opencode package) add it to root `package.json` workspaces and the publish
+   workflow.
 
 ## Testing
 

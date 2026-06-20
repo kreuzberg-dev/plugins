@@ -1,0 +1,42 @@
+{
+  "name": "@kreuzberg/opencode-html-to-markdown",
+  "version": "0.2.0",
+  "description": "OpenCode tools for HTML→Markdown conversion with the html-to-markdown CLI.",
+  "type": "module",
+  "main": ".opencode/plugins/html-to-markdown.js",
+  "exports": {
+    ".": "./.opencode/plugins/html-to-markdown.js"
+  },
+  "files": [
+    ".opencode/",
+    "assets/",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kreuzberg-dev/plugins.git",
+    "directory": "plugins/html-to-markdown"
+  },
+  "homepage": "https://github.com/kreuzberg-dev/plugins/tree/main/plugins/html-to-markdown",
+  "bugs": {
+    "url": "https://github.com/kreuzberg-dev/plugins/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "opencode",
+    "html-to-markdown",
+    "markdown",
+    "html",
+    "conversion"
+  ],
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.17.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

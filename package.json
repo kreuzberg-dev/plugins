@@ -1,12 +1,14 @@
 {
   "name": "@kreuzberg/plugins",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "workspaces": [
     "plugins/kreuzberg",
     "plugins/kreuzcrawl",
-    "plugins/kreuzberg-cloud"
+    "plugins/kreuzberg-cloud",
+    "plugins/html-to-markdown",
+    "plugins/tree-sitter-language-pack"
   ],
   "scripts": {
     "validate:opencode": "node scripts/validate-opencode.mjs"

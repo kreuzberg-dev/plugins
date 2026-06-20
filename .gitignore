@@ -28,3 +28,9 @@ venv/
 # Coverage output
 .coverage
 coverage/
+
+# basemind index cache
+.basemind/
+
+# Plugin binaries installed at runtime by scripts/mcp-launch.sh
+plugins/*/bin/

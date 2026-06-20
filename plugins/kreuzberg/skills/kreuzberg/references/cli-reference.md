@@ -4,13 +4,18 @@ Comprehensive command-line interface for the Kreuzberg document intelligence lib
 
 ## Installation
 
-Install from crates.io:
-
 ```bash
-cargo install kreuzberg-cli
+brew install kreuzberg-dev/tap/kreuzberg
+# or run without a persistent install (self-installs the binary):
+npx kreuzberg --help
+uvx --from kreuzberg kreuzberg --help
 ```
 
-Or download pre-built binaries from [GitHub Releases](https://github.com/kreuzberg-dev/kreuzberg/releases).
+Or download a pre-built binary from the [latest GitHub Release](https://github.com/kreuzberg-dev/kreuzberg/releases/latest), or build from source:
+
+```bash
+cargo install --git https://github.com/kreuzberg-dev/kreuzberg kreuzberg-cli
+```
 
 ## Commands
 
