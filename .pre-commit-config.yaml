@@ -20,11 +20,23 @@ repos:
       - id: check-merge-conflict
       - id: check-added-large-files
       - id: detect-private-key
-      - id: check-json
       - id: check-yaml
+        args:
+          - --allow-multiple-documents
+          - --unsafe
+      - id: check-json
       - id: check-toml
       - id: check-case-conflict
-      - id: oxfmt
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
       - id: shfmt
+        args:
+          - -w
+          - -i
+          - "2"
       - id: shellcheck
+      - id: oxfmt
       - id: rumdl-fmt
+      - id: actionlint
+      - id: gh-actions-updater
+      - id: typos

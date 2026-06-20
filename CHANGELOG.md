@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MCP server transport for kreuzberg-cloud
 - html-to-markdown and tree-sitter-language-pack MCP servers (plugin wiring is in place; the upstream `mcp` subcommands land in their next releases)
 
+## [0.2.2] - 2026-06-20
+
+### Changed
+
+- Align `.pre-commit-config.yaml` with the shared `kreuzberg-dev/pre-commit-hooks` set (adds actionlint, shebang checks, `gh-actions-updater`, and `typos`); repo lints clean.
+
 ## [0.2.1] - 2026-06-20
 
 ### Fixed

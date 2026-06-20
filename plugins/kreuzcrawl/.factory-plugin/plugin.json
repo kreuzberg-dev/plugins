@@ -1,6 +1,6 @@
 {
   "name": "kreuzcrawl",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Web crawling and scraping with HTML→Markdown and headless-Chrome fallback.",
   "author": {
     "name": "Kreuzberg, Inc.",
