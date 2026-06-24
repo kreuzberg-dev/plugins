@@ -205,7 +205,7 @@ Image sizes:
 - Core image: 1.0-1.3GB
 - Full image: ~1.0-1.3GB
 
-See the [Docker guide](https://docs.kreuzberg.dev/guides/docker/) for deployment details.
+See the [Docker guide](https://docs.xberg.io/guides/docker/) for deployment details.
 
 ## Platform Support
 

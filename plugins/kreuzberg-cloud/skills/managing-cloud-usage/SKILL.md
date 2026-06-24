@@ -12,7 +12,7 @@ quota for the project.
 ## Endpoint
 
 ```text
-GET https://api.kreuzberg.dev/v1/usage
+GET https://api.xberg.io/v1/usage
 Authorization: Bearer $KREUZBERG_API_KEY
 ```
 
@@ -60,21 +60,21 @@ Both are optional. Omit both for the current calendar month.
 ### Current-month usage
 
 ```bash
-curl -s https://api.kreuzberg.dev/v1/usage \
+curl -s https://api.xberg.io/v1/usage \
   -H "Authorization: Bearer $KREUZBERG_API_KEY" | jq .
 ```
 
 ### Specific date range
 
 ```bash
-curl -s "https://api.kreuzberg.dev/v1/usage?start=2026-01-01&end=2026-02-01" \
+curl -s "https://api.xberg.io/v1/usage?start=2026-01-01&end=2026-02-01" \
   -H "Authorization: Bearer $KREUZBERG_API_KEY" | jq .
 ```
 
 ### Quota remaining as a percentage
 
 ```bash
-curl -s https://api.kreuzberg.dev/v1/usage \
+curl -s https://api.xberg.io/v1/usage \
   -H "Authorization: Bearer $KREUZBERG_API_KEY" \
   | jq '.quota_remaining * 100 / .quota_limit'
 ```

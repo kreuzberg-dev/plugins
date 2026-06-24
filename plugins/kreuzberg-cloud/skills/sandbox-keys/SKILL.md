@@ -25,7 +25,7 @@ of the no-auth mint endpoint.
 ## Endpoint
 
 ```text
-POST https://api.kreuzberg.dev/v1/sandbox/key
+POST https://api.xberg.io/v1/sandbox/key
 ```
 
 No `Authorization` header — this is the only authenticated-by-omission
@@ -49,10 +49,10 @@ After 24 hours or 50 pages — whichever comes first — the key returns
 ### Mint and use
 
 ```bash
-KREUZBERG_API_KEY=$(curl -sX POST https://api.kreuzberg.dev/v1/sandbox/key \
+KREUZBERG_API_KEY=$(curl -sX POST https://api.xberg.io/v1/sandbox/key \
   | jq -r .api_key)
 
-curl -sX POST https://api.kreuzberg.dev/v1/extract \
+curl -sX POST https://api.xberg.io/v1/extract \
   -H "Authorization: Bearer $KREUZBERG_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{

@@ -22,7 +22,7 @@ extraction result inline. Pair every submit with either a poll loop
 ## Endpoint
 
 ```text
-POST https://api.kreuzberg.dev/v1/extract
+POST https://api.xberg.io/v1/extract
 Authorization: Bearer $KREUZBERG_API_KEY
 Content-Type: application/json | multipart/form-data
 ```
@@ -34,7 +34,7 @@ Returns `202 Accepted` with `ExtractResponse`.
 ### 1. Base64 JSON (small files, <5 MB recommended)
 
 ```bash
-curl -X POST https://api.kreuzberg.dev/v1/extract \
+curl -X POST https://api.xberg.io/v1/extract \
   -H "Authorization: Bearer $KREUZBERG_API_KEY" \
   -H "Content-Type: application/json" \
   -d @- <<JSON
@@ -59,7 +59,7 @@ JSON
 ### 2. Multipart (binary, recommended for anything over ~1 MB)
 
 ```bash
-curl -X POST https://api.kreuzberg.dev/v1/extract \
+curl -X POST https://api.xberg.io/v1/extract \
   -H "Authorization: Bearer $KREUZBERG_API_KEY" \
   -F "file=@invoice.pdf;type=application/pdf" \
   -F 'options={"extraction_config":{"output_format":"markdown"}};type=application/json'
@@ -74,7 +74,7 @@ Add a `webhook` part as a JSON string:
 ### 3. URL crawl
 
 ```bash
-curl -X POST https://api.kreuzberg.dev/v1/extract \
+curl -X POST https://api.xberg.io/v1/extract \
   -H "Authorization: Bearer $KREUZBERG_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{

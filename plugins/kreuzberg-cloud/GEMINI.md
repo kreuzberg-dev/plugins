@@ -1,6 +1,6 @@
 # kreuzberg-cloud
 
-Managed Kreuzberg document intelligence on `api.kreuzberg.dev` from Gemini CLI
+Managed Kreuzberg document intelligence on `api.xberg.io` from Gemini CLI
 sessions. The cloud surface accepts PDFs, Office docs, images, and URL crawls;
 returns text, tables, metadata, and images; supports webhook delivery,
 presigned uploads for large files, document versioning and diffing, sandbox
@@ -18,7 +18,7 @@ HTTP API directly (curl) or use the official TypeScript / Python SDKs.
 Every request needs a Bearer token in the `Authorization` header:
 
 ```bash
-curl https://api.kreuzberg.dev/v1/usage \
+curl https://api.xberg.io/v1/usage \
   -H "Authorization: Bearer $KREUZBERG_API_KEY"
 ```
 

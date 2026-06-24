@@ -28,7 +28,7 @@ job UUID.
 ## Get the latest version
 
 ```bash
-curl -s https://api.kreuzberg.dev/v1/documents/$DOC_ID \
+curl -s https://api.xberg.io/v1/documents/$DOC_ID \
   -H "Authorization: Bearer $KREUZBERG_API_KEY"
 ```
 
@@ -38,7 +38,7 @@ Returns the latest version's extraction result (same `result` shape as
 ## List versions
 
 ```bash
-curl -s https://api.kreuzberg.dev/v1/documents/$DOC_ID/versions \
+curl -s https://api.xberg.io/v1/documents/$DOC_ID/versions \
   -H "Authorization: Bearer $KREUZBERG_API_KEY"
 ```
 
@@ -49,7 +49,7 @@ a `from`/`to` value when diffing.
 ## Diff two versions
 
 ```bash
-curl -s "https://api.kreuzberg.dev/v1/documents/$DOC_ID/diff?from=1&to=3" \
+curl -s "https://api.xberg.io/v1/documents/$DOC_ID/diff?from=1&to=3" \
   -H "Authorization: Bearer $KREUZBERG_API_KEY"
 ```
 
@@ -84,7 +84,7 @@ Poll it the same way you poll extraction jobs — exponential backoff capped
 at ~30s — until terminal:
 
 ```bash
-curl -s https://api.kreuzberg.dev/v1/documents/$DOC_ID/diff/$DIFF_JOB_ID \
+curl -s https://api.xberg.io/v1/documents/$DOC_ID/diff/$DIFF_JOB_ID \
   -H "Authorization: Bearer $KREUZBERG_API_KEY"
 ```
 

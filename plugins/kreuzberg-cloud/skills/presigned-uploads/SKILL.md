@@ -32,7 +32,7 @@ every PUT in step 2 succeeds.
 ## Step 1 — presign
 
 ```bash
-curl -X POST https://api.kreuzberg.dev/v1/uploads/presign \
+curl -X POST https://api.xberg.io/v1/uploads/presign \
   -H "Authorization: Bearer $KREUZBERG_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -90,7 +90,7 @@ entry in `uploads` before moving on.
 ## Step 3 — confirm
 
 ```bash
-curl -X POST https://api.kreuzberg.dev/v1/uploads/confirm \
+curl -X POST https://api.xberg.io/v1/uploads/confirm \
   -H "Authorization: Bearer $KREUZBERG_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"batch_id": "batch_550e8400-e29b-41d4-a716"}'
@@ -114,7 +114,7 @@ From here, the flow is identical to `offloading-extraction` — poll
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
-API="https://api.kreuzberg.dev"
+API="https://api.xberg.io"
 KEY="$KREUZBERG_API_KEY"
 FILE="scan.pdf"
 

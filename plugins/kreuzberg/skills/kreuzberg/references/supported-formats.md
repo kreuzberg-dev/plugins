@@ -216,8 +216,8 @@ Archives and nested formats support file listing and sequential extraction:
 
 ## Getting Started
 
-For language-specific examples and detailed API documentation, see the [API Reference](https://docs.kreuzberg.dev/reference/api-python/).
+For language-specific examples and detailed API documentation, see the [API Reference](https://docs.xberg.io/reference/api-python/).
 
-For OCR configuration and backend selection, see the [OCR Backends Guide](https://docs.kreuzberg.dev/guides/ocr/).
+For OCR configuration and backend selection, see the [OCR Backends Guide](https://docs.xberg.io/guides/ocr/).
 
-For comprehensive format details and format detection, see the [Complete Format Reference](https://docs.kreuzberg.dev/reference/formats/).
+For comprehensive format details and format detection, see the [Complete Format Reference](https://docs.xberg.io/reference/formats/).

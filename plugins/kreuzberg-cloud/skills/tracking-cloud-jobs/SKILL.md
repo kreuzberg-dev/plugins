@@ -18,7 +18,7 @@ Pick webhooks when you can't block, or when the job runs minutes long.
 ## Endpoint
 
 ```text
-GET https://api.kreuzberg.dev/v1/jobs/{id}
+GET https://api.xberg.io/v1/jobs/{id}
 Authorization: Bearer $KREUZBERG_API_KEY
 ```
 
@@ -78,7 +78,7 @@ delay=1
 while true; do
   body=$(curl -fsS \
     -H "Authorization: Bearer $KREUZBERG_API_KEY" \
-    "https://api.kreuzberg.dev/v1/jobs/$JOB_ID")
+    "https://api.xberg.io/v1/jobs/$JOB_ID")
   status=$(echo "$body" | jq -r .status)
   case "$status" in
     completed|partial_success|failed|cancelled)

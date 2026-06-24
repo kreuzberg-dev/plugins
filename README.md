@@ -15,7 +15,7 @@ Document-intelligence plugins for coding agents. Install any of the six into Cla
 |--------|-------------------|--------|
 | **kreuzberg** | Local document extraction from 91+ formats (PDF, Office, images with OCR, HTML, email, archives, academic) | Stable — v0.2.2 |
 | **kreuzcrawl** | Web crawling and scraping with HTML→Markdown and headless-Chrome fallback | Stable — v0.2.2 |
-| **kreuzberg-cloud** | Managed extraction via `api.kreuzberg.dev` | Skills-only — MCP server in a later release |
+| **kreuzberg-cloud** | Managed extraction via `api.xberg.io` | Skills-only — MCP server in a later release |
 | **html-to-markdown** | Fast, lossless HTML→Markdown with structured metadata and tables | Stable — v0.2.2 |
 | **liter-llm** | Universal LLM API client for 143 providers (chat, streaming, tools, embeddings) | Stable — v0.2.2 |
 | **tree-sitter-language-pack** | Parse and extract code intelligence from 300+ languages | Stable — v0.2.2 |

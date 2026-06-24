@@ -1,7 +1,7 @@
 ---
 name: kreuzberg-cloud
 description: >-
-  Managed Kreuzberg document intelligence at api.kreuzberg.dev. Use when the
+  Managed Kreuzberg document intelligence at api.xberg.io. Use when the
   user wants cloud extraction with webhook delivery, presigned uploads for
   large files, document versioning and diffing, sandbox keys, or per-project
   usage tracking — instead of running the local kreuzberg CLI. Covers
@@ -17,14 +17,14 @@ metadata:
 # Kreuzberg Cloud
 
 Kreuzberg Cloud is the managed extraction API hosted at
-`https://api.kreuzberg.dev`. It exposes the same Rust extraction engine as
+`https://api.xberg.io`. It exposes the same Rust extraction engine as
 the local `kreuzberg` CLI, with two extras: jobs are asynchronous (webhook
 or polling delivery) and large files go through presigned uploads instead
 of in-band base64.
 
 Use this skill when writing code that:
 
-- Hits `api.kreuzberg.dev` directly via HTTP.
+- Hits `api.xberg.io` directly via HTTP.
 - Uses the `@kreuzberg/cloud` (npm) or `kreuzberg-cloud-sdk` (PyPI) SDKs.
 - Configures webhooks, sandbox keys, or usage queries.
 
@@ -57,7 +57,7 @@ v0.2.0. Until then, prefer one of:
 
 Three options, in order of preference for production:
 
-1. **Production key** — sign up at <https://kreuzberg.dev/cloud>, mint a key
+1. **Production key** — sign up at <https://xberg.io/cloud>, mint a key
    from the dashboard. Format: `sk_live_*`.
 2. **Sandbox key** — no signup, 24-hour TTL, 50-page quota, rate-limited to
    10 keys per IP per 24 hours. Format: `sk_sandbox_*`. See the
@@ -78,7 +78,7 @@ present.
 Every request — except `POST /v1/sandbox/key` — uses a Bearer token:
 
 ```bash
-curl https://api.kreuzberg.dev/v1/usage \
+curl https://api.xberg.io/v1/usage \
   -H "Authorization: Bearer $KREUZBERG_API_KEY"
 ```
 
@@ -87,11 +87,11 @@ resolves project context from the key.
 
 ## Base URL and versioning
 
-- Base: `https://api.kreuzberg.dev`
+- Base: `https://api.xberg.io`
 - Path prefix: `/v1/` for all extraction, jobs, sandbox, uploads, usage
   endpoints. Health endpoints (`/healthz`, `/readyz`) are unversioned.
 - The OpenAPI 3.1 spec is published at
-  <https://api.kreuzberg.dev/openapi.json>; full reference at
+  <https://api.xberg.io/openapi.json>; full reference at
   <https://docs.kreuzberg.cloud>.
 
 ## The 12 endpoints
@@ -289,7 +289,7 @@ The SDKs surface these as typed exceptions: `AuthError`, `ValidationError`,
 
 ```bash
 # Mint an ephemeral key.
-curl -X POST https://api.kreuzberg.dev/v1/sandbox/key
+curl -X POST https://api.xberg.io/v1/sandbox/key
 # → { "api_key": "sk_sandbox_...", "expires_at": "...", "pages_remaining": 50 }
 ```
 
@@ -313,7 +313,7 @@ async with await AsyncKreuzbergCloud.from_sandbox() as client:
 
 ```bash
 # 1. Submit.
-JOB_ID=$(curl -sX POST https://api.kreuzberg.dev/v1/extract \
+JOB_ID=$(curl -sX POST https://api.xberg.io/v1/extract \
   -H "Authorization: Bearer $KREUZBERG_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -325,7 +325,7 @@ JOB_ID=$(curl -sX POST https://api.kreuzberg.dev/v1/extract \
   }' | jq -r '.job_ids[0]')
 
 # 2. Poll until terminal.
-curl -s https://api.kreuzberg.dev/v1/jobs/$JOB_ID \
+curl -s https://api.xberg.io/v1/jobs/$JOB_ID \
   -H "Authorization: Bearer $KREUZBERG_API_KEY"
 ```
 
@@ -341,7 +341,7 @@ curl -s https://api.kreuzberg.dev/v1/jobs/$JOB_ID \
 ## References
 
 - API docs: <https://docs.kreuzberg.cloud>
-- OpenAPI spec: <https://api.kreuzberg.dev/openapi.json>
+- OpenAPI spec: <https://api.xberg.io/openapi.json>
 - TypeScript SDK: <https://www.npmjs.com/package/@kreuzberg/cloud>
 - Python SDK: <https://pypi.org/project/kreuzberg-cloud-sdk/>
-- Pricing and signup: <https://kreuzberg.dev/cloud>
+- Pricing and signup: <https://xberg.io/cloud>

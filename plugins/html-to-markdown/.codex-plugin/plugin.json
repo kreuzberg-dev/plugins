@@ -5,9 +5,9 @@
   "author": {
     "name": "Kreuzberg, Inc.",
     "email": "support@kreuzberg.dev",
-    "url": "https://kreuzberg.dev"
+    "url": "https://xberg.io"
   },
-  "homepage": "https://kreuzberg.dev",
+  "homepage": "https://xberg.io",
   "repository": "https://github.com/xberg-io/plugins",
   "license": "MIT",
   "keywords": [
@@ -33,9 +33,9 @@
       "Fetch a URL and convert it to Markdown",
       "Extract metadata and tables from this HTML"
     ],
-    "websiteURL": "https://kreuzberg.dev",
-    "privacyPolicyURL": "https://kreuzberg.dev/privacy",
-    "termsOfServiceURL": "https://kreuzberg.dev/terms",
+    "websiteURL": "https://xberg.io",
+    "privacyPolicyURL": "https://xberg.io/privacy",
+    "termsOfServiceURL": "https://xberg.io/terms",
     "brandColor": "#58FBDA",
     "composerIcon": "./assets/icon.svg",
     "logo": "./assets/logo.svg",

@@ -1,6 +1,6 @@
 # kreuzberg-cloud
 
-Managed Kreuzberg document intelligence on `api.kreuzberg.dev` — async extraction with OCR, URL crawling, presigned uploads for large files, document versioning and diffing, signed webhook delivery, sandbox keys, and per-project usage tracking.
+Managed Kreuzberg document intelligence on `api.xberg.io` — async extraction with OCR, URL crawling, presigned uploads for large files, document versioning and diffing, signed webhook delivery, sandbox keys, and per-project usage tracking.
 
 <!-- TODO: screenshot -->
 
@@ -38,7 +38,7 @@ If neither is set, the plugin's SessionStart hook displays a reminder. For evalu
 
 | Skill | Trigger |
 |-------|---------|
-| **kreuzberg-cloud** | Managed Kreuzberg document intelligence at api.kreuzberg.dev. Use when the user wants cloud extraction with webhook delivery, presigned uploads for large files, document versioning and diffing, sandbox keys, or per-project usage tracking — instead of running the local kreuzberg CLI. Covers authentication, the 12 REST endpoints, request/response shapes, error model, and SDK options. |
+| **kreuzberg-cloud** | Managed Kreuzberg document intelligence at api.xberg.io. Use when the user wants cloud extraction with webhook delivery, presigned uploads for large files, document versioning and diffing, sandbox keys, or per-project usage tracking — instead of running the local kreuzberg CLI. Covers authentication, the 12 REST endpoints, request/response shapes, error model, and SDK options. |
 | **offloading-extraction** | Use when the user wants to extract a document via the cloud rather than the local kreuzberg CLI. Covers POST /v1/extract — JSON vs multipart bodies, URL crawls, options block, webhook attachment, and the async response shape. |
 | **tracking-cloud-jobs** | Use when an extraction job has been submitted and the result needs to be retrieved. Covers GET /v1/jobs/{id}, polling cadence with exponential backoff, terminal status detection, and webhook delivery (signature verification, retry semantics). |
 | **versioning-documents** | Use when the user wants to retrieve a stored document and its result, list a document's versions, or diff two versions. Covers GET /v1/documents/{id}, /versions, and the sync-with-async-fallback diff at /diff plus its poll endpoint. |
@@ -64,7 +64,7 @@ Create `~/.kreuzberg/cloud.toml`:
 
 ```toml
 api_key = "sk_live_..."
-base_url = "https://api.kreuzberg.dev"  # optional
+base_url = "https://api.xberg.io"  # optional
 ```
 
 Precedence: CLI argument > environment variable > config file.
@@ -74,7 +74,7 @@ Precedence: CLI argument > environment variable > config file.
 Submit a document for extraction via curl:
 
 ```text
-curl -X POST https://api.kreuzberg.dev/v1/extract \
+curl -X POST https://api.xberg.io/v1/extract \
   -H "Authorization: Bearer $KREUZBERG_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"url":"https://example.com/document.pdf"}'

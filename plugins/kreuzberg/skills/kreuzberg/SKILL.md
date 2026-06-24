@@ -432,5 +432,5 @@ Task-focused sibling skills go deeper than this overview:
 - **batch-extraction** — the `batch` command, `--file-configs`, parallelism, error recovery.
 - **picking-a-format** — choosing `--format` / `--content-format` per consumer.
 
-Full documentation: <https://docs.kreuzberg.dev>
+Full documentation: <https://docs.xberg.io>
 GitHub: <https://github.com/xberg-io/kreuzberg>

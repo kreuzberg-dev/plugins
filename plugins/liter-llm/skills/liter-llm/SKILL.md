@@ -200,5 +200,5 @@ and Responses API (`create_response`, `retrieve_response`, `cancel_response`).
 
 ## Additional resources
 
-- Upstream docs: <https://docs.liter-llm.kreuzberg.dev>
+- Upstream docs: <https://docs.liter-llm.xberg.io>
 - GitHub: <https://github.com/xberg-io/liter-llm>
