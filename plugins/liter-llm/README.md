@@ -13,7 +13,7 @@ Pending review for official Claude marketplace.
 Self-host:
 
 ```text
-/plugin marketplace add kreuzberg-dev/plugins
+/plugin marketplace add xberg-io/plugins
 /plugin install liter-llm@kreuzberg
 ```
 
@@ -28,16 +28,16 @@ server.
 To install the CLI yourself (also gives you the proxy server):
 
 ```bash
-brew install kreuzberg-dev/tap/liter-llm
+brew install xberg-io/tap/liter-llm
 # or from crates.io (compiles from source):
 cargo install liter-llm-cli
 # or run it without a persistent install (the CLI proxy package self-installs the binary):
 npx @kreuzberg/liter-llm-cli --help
 uvx --from liter-llm-cli liter-llm --help
 # or download a prebuilt binary from the latest GitHub release:
-#   https://github.com/kreuzberg-dev/liter-llm/releases/latest
+#   https://github.com/xberg-io/liter-llm/releases/latest
 # or build the unreleased HEAD from source:
-cargo install --git https://github.com/kreuzberg-dev/liter-llm liter-llm-cli
+cargo install --git https://github.com/xberg-io/liter-llm liter-llm-cli
 ```
 
 Set provider API keys via environment variables (`OPENAI_API_KEY`,
@@ -79,7 +79,7 @@ through to the next on any failure (override with
    the binary (probed first; falls through if not published yet).
 3. `uvx --from liter-llm-cli liter-llm` — the published PyPI CLI proxy package
    (probed first; falls through if not published yet).
-4. `brew install kreuzberg-dev/tap/liter-llm` if Homebrew is available.
+4. `brew install xberg-io/tap/liter-llm` if Homebrew is available.
 5. A checksum-verified prebuilt binary from the tool's *latest* GitHub release
    (`liter-llm-<latest-version>-<target>.tar.gz`, verified against
    `SHA256SUMS-<latest-version>.txt`). The tool version is resolved from the
@@ -153,10 +153,10 @@ The plugin version tracks the marketplace `VERSION` file. See [CHANGELOG.md](../
 
 ## License
 
-MIT. Skill content references the upstream [liter-llm](https://github.com/kreuzberg-dev/liter-llm) repository.
+MIT. Skill content references the upstream [liter-llm](https://github.com/xberg-io/liter-llm) repository.
 
 ## See also
 
-- **Marketplace**: [kreuzberg-dev/plugins](https://github.com/kreuzberg-dev/plugins)
-- **Upstream**: [kreuzberg-dev/liter-llm](https://github.com/kreuzberg-dev/liter-llm)
+- **Marketplace**: [xberg-io/plugins](https://github.com/xberg-io/plugins)
+- **Upstream**: [xberg-io/liter-llm](https://github.com/xberg-io/liter-llm)
 - **Sibling plugins**: [kreuzberg](../kreuzberg/README.md), [kreuzcrawl](../kreuzcrawl/README.md), [kreuzberg-cloud](../kreuzberg-cloud/README.md)

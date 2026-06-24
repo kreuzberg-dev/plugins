@@ -22,12 +22,12 @@ MCP server.
 The `kreuzcrawl` binary must be on `PATH`. Install one of:
 
 ```bash
-brew install kreuzberg-dev/tap/kreuzcrawl
+brew install xberg-io/tap/kreuzcrawl
 # or run without a persistent install (self-installs the binary):
 npx @kreuzberg/kreuzcrawl-cli --help
 uvx --from kreuzcrawl kreuzcrawl --help
 # or build from source (mcp/api subcommands are non-default features):
-cargo install --git https://github.com/kreuzberg-dev/kreuzcrawl kreuzcrawl-cli --features all
+cargo install --git https://github.com/xberg-io/kreuzcrawl kreuzcrawl-cli --features all
 ```
 
 ## Skills

@@ -5,12 +5,12 @@ Binary name: `html-to-markdown`
 ## Installation
 
 ```bash
-brew install kreuzberg-dev/tap/html-to-markdown
+brew install xberg-io/tap/html-to-markdown
 # or run without a persistent install (self-installs the binary):
 npx @kreuzberg/html-to-markdown-cli --help
 uvx --from html-to-markdown html-to-markdown --help
 # or build from source:
-cargo install --git https://github.com/kreuzberg-dev/html-to-markdown html-to-markdown-cli
+cargo install --git https://github.com/xberg-io/html-to-markdown html-to-markdown-cli
 ```
 
 ## Usage

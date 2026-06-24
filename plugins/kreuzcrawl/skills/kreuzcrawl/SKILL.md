@@ -11,7 +11,7 @@ license: MIT
 metadata:
   author: kreuzberg-dev
   version: "0.1.0"
-  repository: https://github.com/kreuzberg-dev/kreuzcrawl
+  repository: https://github.com/xberg-io/kreuzcrawl
 ---
 
 # Kreuzcrawl
@@ -34,12 +34,12 @@ Use this skill when the user wants to:
 The plugin shells out to a `kreuzcrawl` binary on `PATH`. Install one of:
 
 ```bash
-brew install kreuzberg-dev/tap/kreuzcrawl
+brew install xberg-io/tap/kreuzcrawl
 # or run without a persistent install (the CLI proxy package self-installs the binary):
 npx @kreuzberg/kreuzcrawl-cli --help
 uvx --from kreuzcrawl-cli kreuzcrawl --help
 # or build from source:
-cargo install --git https://github.com/kreuzberg-dev/kreuzcrawl kreuzcrawl-cli --features all
+cargo install --git https://github.com/xberg-io/kreuzcrawl kreuzcrawl-cli --features all
 ```
 
 The `serve` and `mcp` subcommands are gated behind non-default cargo features

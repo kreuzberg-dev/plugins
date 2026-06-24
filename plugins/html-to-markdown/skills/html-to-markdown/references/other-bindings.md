@@ -6,14 +6,14 @@ Brief reference for Go, Ruby, PHP, Java, C#, Elixir, R, WASM, and C FFI.
 
 ## Go
 
-**Module:** `github.com/kreuzberg-dev/html-to-markdown/packages/go/v3`
+**Module:** `github.com/xberg-io/html-to-markdown/packages/go/v3`
 **Package:** `htmltomarkdown`
-**Install:** `go get github.com/kreuzberg-dev/html-to-markdown/packages/go/v3`
+**Install:** `go get github.com/xberg-io/html-to-markdown/packages/go/v3`
 
 Uses cgo with the C FFI layer. Options are passed as JSON strings internally.
 
 ```go
-import "github.com/kreuzberg-dev/html-to-markdown/packages/go/v3/htmltomarkdown"
+import "github.com/xberg-io/html-to-markdown/packages/go/v3/htmltomarkdown"
 
 // Primary function — returns *ConversionResult
 result, err := htmltomarkdown.Convert(html)
@@ -102,8 +102,8 @@ result = HtmlToMarkdown.convert(html, handle)
 
 ## PHP
 
-**Composer:** `kreuzberg-dev/html-to-markdown`
-**Install:** `composer require kreuzberg-dev/html-to-markdown`
+**Composer:** `xberg-io/html-to-markdown`
+**Install:** `composer require xberg-io/html-to-markdown`
 **PHP requirement:** 8.4+
 
 Uses ext-php-rs (native PHP extension). The facade class is `HtmlToMarkdownRs` under the `Html\To\Markdown\Rs` namespace.

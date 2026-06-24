@@ -16,7 +16,7 @@
 #      version line are independent).
 #   b) npx: probe the published npm CLI package, and if it exposes the CLI, run it.
 #   c) uvx: probe the published PyPI CLI package, and if it exposes the CLI, run it.
-#   d) brew install kreuzberg-dev/tap/ts-pack, then exec the on-PATH binary.
+#   d) brew install xberg-io/tap/ts-pack, then exec the on-PATH binary.
 #   e) Direct download of the prebuilt CLI archive from the GitHub LATEST release.
 #   f) Fail with guidance (brew tap, or `cargo install --git` from source).
 #
@@ -50,7 +50,7 @@
 # script MUST go to stderr (>&2). Only the exec'd binary may write to stdout.
 set -euo pipefail
 
-REPO="kreuzberg-dev/tree-sitter-language-pack"
+REPO="xberg-io/tree-sitter-language-pack"
 NPM_PKG="@kreuzberg/ts-pack-cli"
 PYPI_PKG="ts-pack-cli"
 
@@ -128,8 +128,8 @@ fi
 
 # ---- (d) Homebrew -----------------------------------------------------------
 if want brew && have brew; then
-  log "installing via 'brew install kreuzberg-dev/tap/ts-pack' ..."
-  if brew install kreuzberg-dev/tap/ts-pack >&2; then
+  log "installing via 'brew install xberg-io/tap/ts-pack' ..."
+  if brew install xberg-io/tap/ts-pack >&2; then
     if have "$BINARY_NAME"; then
       BREW_BIN="$(command -v "$BINARY_NAME")"
       runnable "$BREW_BIN" && exec "$BREW_BIN" "$@"
@@ -253,7 +253,7 @@ fi
 
 # ---- (f) Give up ------------------------------------------------------------
 die "could not locate or install ts-pack. Install it manually with one of:
-  brew install kreuzberg-dev/tap/ts-pack
-  cargo install --git https://github.com/kreuzberg-dev/tree-sitter-language-pack ts-pack-cli
+  brew install xberg-io/tap/ts-pack
+  cargo install --git https://github.com/xberg-io/tree-sitter-language-pack ts-pack-cli
   or download a prebuilt archive from https://github.com/${REPO}/releases/latest
 then ensure 'ts-pack' is on PATH and retry."

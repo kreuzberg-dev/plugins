@@ -13,7 +13,7 @@ Pending review for official Claude marketplace.
 Self-host:
 
 ```text
-/plugin marketplace add kreuzberg-dev/plugins
+/plugin marketplace add xberg-io/plugins
 /plugin install html-to-markdown@kreuzberg
 ```
 
@@ -29,15 +29,15 @@ To install the CLI yourself:
 
 ```bash
 # (Homebrew 6.0+ requires explicit trust for third-party taps)
-brew trust kreuzberg-dev/tap
-brew install kreuzberg-dev/tap/html-to-markdown
+brew trust xberg-io/tap
+brew install xberg-io/tap/html-to-markdown
 # or run it without a persistent install (the CLI proxy package self-installs the binary):
 npx @kreuzberg/html-to-markdown-cli --help
 uvx --from html-to-markdown-cli html-to-markdown --help
 # or download a prebuilt binary from the latest GitHub release:
-#   https://github.com/kreuzberg-dev/html-to-markdown/releases/latest
+#   https://github.com/xberg-io/html-to-markdown/releases/latest
 # or build from source:
-cargo install --git https://github.com/kreuzberg-dev/html-to-markdown html-to-markdown-cli
+cargo install --git https://github.com/xberg-io/html-to-markdown html-to-markdown-cli
 ```
 
 The skills also cover the language SDKs. Install the one you need:
@@ -165,10 +165,10 @@ The plugin version tracks the marketplace `VERSION` file. See [CHANGELOG.md](../
 
 ## License
 
-MIT. The skill content references the upstream [html-to-markdown](https://github.com/kreuzberg-dev/html-to-markdown) repository.
+MIT. The skill content references the upstream [html-to-markdown](https://github.com/xberg-io/html-to-markdown) repository.
 
 ## See also
 
-- **Marketplace**: [kreuzberg-dev/plugins](https://github.com/kreuzberg-dev/plugins)
-- **Upstream**: [kreuzberg-dev/html-to-markdown](https://github.com/kreuzberg-dev/html-to-markdown)
+- **Marketplace**: [xberg-io/plugins](https://github.com/xberg-io/plugins)
+- **Upstream**: [xberg-io/html-to-markdown](https://github.com/xberg-io/html-to-markdown)
 - **Sibling plugins**: [kreuzberg](../kreuzberg/README.md), [kreuzcrawl](../kreuzcrawl/README.md)

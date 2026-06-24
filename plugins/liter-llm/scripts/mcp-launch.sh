@@ -17,7 +17,7 @@
 #      is unrelated to the tool's version).
 #   b) npx: probe the published npm package, and if it exposes the CLI, run it.
 #   c) uvx: probe the published PyPI package, and if it exposes the CLI, run it.
-#   d) brew install kreuzberg-dev/tap/liter-llm, then exec the on-PATH binary.
+#   d) brew install xberg-io/tap/liter-llm, then exec the on-PATH binary.
 #   e) Checksum-verified download of the prebuilt CLI archive from the tool's
 #      LATEST GitHub release. The latest tag is resolved via the GitHub API; the
 #      versioned asset + SHA256SUMS file are then fetched and verified.
@@ -42,7 +42,7 @@
 # script MUST go to stderr (>&2). Only the exec'd binary may write to stdout.
 set -euo pipefail
 
-REPO="kreuzberg-dev/liter-llm"
+REPO="xberg-io/liter-llm"
 NPM_PKG="@kreuzberg/liter-llm-cli"
 PYPI_PKG="liter-llm-cli"
 
@@ -122,8 +122,8 @@ fi
 
 # ---- (d) Homebrew -----------------------------------------------------------
 if want brew && have brew; then
-  log "installing via 'brew install kreuzberg-dev/tap/liter-llm' ..."
-  if brew install kreuzberg-dev/tap/liter-llm >&2; then
+  log "installing via 'brew install xberg-io/tap/liter-llm' ..."
+  if brew install xberg-io/tap/liter-llm >&2; then
     if have "$BINARY_NAME"; then
       BREW_BIN="$(command -v "$BINARY_NAME")"
       runs_ok "$BREW_BIN" && exec "$BREW_BIN" "$@"
@@ -285,8 +285,8 @@ fi
 
 # ---- (f) Give up with guidance ----------------------------------------------
 die "could not locate or install liter-llm. Install it with one of:
-  brew install kreuzberg-dev/tap/liter-llm
+  brew install xberg-io/tap/liter-llm
   cargo install liter-llm-cli
-  cargo install --git https://github.com/kreuzberg-dev/liter-llm liter-llm-cli   # unreleased HEAD
+  cargo install --git https://github.com/xberg-io/liter-llm liter-llm-cli   # unreleased HEAD
 or download a prebuilt archive from https://github.com/${REPO}/releases/latest
 then re-run, or set LITER_LLM_LAUNCHER to force a method (auto|npx|uvx|brew|download)."

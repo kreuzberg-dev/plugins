@@ -13,7 +13,7 @@ Pending review for official Claude marketplace.
 Self-host:
 
 ```text
-/plugin marketplace add kreuzberg-dev/plugins
+/plugin marketplace add xberg-io/plugins
 /plugin install kreuzberg@kreuzberg
 ```
 
@@ -22,7 +22,7 @@ Self-host:
 Install the `kreuzberg` CLI:
 
 ```bash
-brew install kreuzberg-dev/tap/kreuzberg
+brew install xberg-io/tap/kreuzberg
 ```
 
 Or run without a persistent install:
@@ -32,7 +32,7 @@ npx @kreuzberg/kreuzberg-cli --help
 uvx --from kreuzberg-cli kreuzberg --help
 ```
 
-Or download a prebuilt binary from the [latest GitHub release](https://github.com/kreuzberg-dev/kreuzberg/releases/latest), or build from source:
+Or download a prebuilt binary from the [latest GitHub release](https://github.com/xberg-io/kreuzberg/releases/latest), or build from source:
 
 ```bash
 cargo install kreuzberg-cli --features mcp
@@ -124,10 +124,10 @@ The plugin version tracks the marketplace `VERSION` file. See [CHANGELOG.md](../
 
 ## License
 
-MIT. The skill content uses Elastic-2.0 references to the upstream [kreuzberg](https://github.com/kreuzberg-dev/kreuzberg) repository.
+MIT. The skill content uses Elastic-2.0 references to the upstream [kreuzberg](https://github.com/xberg-io/kreuzberg) repository.
 
 ## See also
 
-- **Marketplace**: [kreuzberg-dev/plugins](https://github.com/kreuzberg-dev/plugins)
-- **Upstream**: [kreuzberg-dev/kreuzberg](https://github.com/kreuzberg-dev/kreuzberg)
+- **Marketplace**: [xberg-io/plugins](https://github.com/xberg-io/plugins)
+- **Upstream**: [xberg-io/kreuzberg](https://github.com/xberg-io/kreuzberg)
 - **Sibling plugins**: [kreuzcrawl](../kreuzcrawl/README.md), [kreuzberg-cloud](../kreuzberg-cloud/README.md)

@@ -12,7 +12,7 @@ license: MIT
 metadata:
   author: kreuzberg-dev
   version: "0.1.0"
-  repository: https://github.com/kreuzberg-dev/liter-llm
+  repository: https://github.com/xberg-io/liter-llm
 ---
 
 # Liter-LLM Universal LLM Client
@@ -60,20 +60,20 @@ building software; the proxy when centralizing access for multiple consumers.
 
 ```bash
 # Homebrew (macOS / Linux)
-brew install kreuzberg-dev/tap/liter-llm
+brew install xberg-io/tap/liter-llm
 
 # or run it without a persistent install (the CLI proxy package self-installs the binary)
 npx @kreuzberg/liter-llm-cli --help
 uvx --from liter-llm-cli liter-llm --help
 
 # or download a prebuilt binary from the latest GitHub release:
-#   https://github.com/kreuzberg-dev/liter-llm/releases/latest
+#   https://github.com/xberg-io/liter-llm/releases/latest
 
 # or build from source
-cargo install --git https://github.com/kreuzberg-dev/liter-llm liter-llm-cli
+cargo install --git https://github.com/xberg-io/liter-llm liter-llm-cli
 
 # or Docker (35MB image)
-docker pull ghcr.io/kreuzberg-dev/liter-llm
+docker pull ghcr.io/xberg-io/liter-llm
 ```
 
 ### Language bindings
@@ -83,9 +83,9 @@ docker pull ghcr.io/kreuzberg-dev/liter-llm
 | Python | `pip install liter-llm` |
 | Node.js | `pnpm add @kreuzberg/liter-llm-node` |
 | Rust | `cargo add liter-llm` |
-| Go | `go get github.com/kreuzberg-dev/liter-llm/packages/go` |
+| Go | `go get github.com/xberg-io/liter-llm/packages/go` |
 | Ruby | `gem install liter_llm` |
-| PHP | `composer require kreuzberg-dev/liter-llm` |
+| PHP | `composer require xberg-io/liter-llm` |
 | C# | `dotnet add package LiterLlm` |
 | WASM | `pnpm add @kreuzberg/liter-llm-wasm` |
 
@@ -201,4 +201,4 @@ and Responses API (`create_response`, `retrieve_response`, `cancel_response`).
 ## Additional resources
 
 - Upstream docs: <https://docs.liter-llm.kreuzberg.dev>
-- GitHub: <https://github.com/kreuzberg-dev/liter-llm>
+- GitHub: <https://github.com/xberg-io/liter-llm>

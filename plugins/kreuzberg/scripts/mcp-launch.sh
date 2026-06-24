@@ -15,7 +15,7 @@
 #      version line are independent).
 #   b) npx: probe the published npm package, and if it exposes the CLI, run it.
 #   c) uvx: probe the published PyPI package, and if it exposes the CLI, run it.
-#   d) brew install kreuzberg-dev/tap/kreuzberg, then exec the on-PATH binary.
+#   d) brew install xberg-io/tap/kreuzberg, then exec the on-PATH binary.
 #   e) Direct download of the prebuilt CLI archive from the GitHub LATEST release.
 #   f) Fail with guidance (brew tap, or `cargo install --git` from source).
 #
@@ -121,8 +121,8 @@ fi
 
 # ---- (d) Homebrew -----------------------------------------------------------
 if want brew && have brew; then
-  log "installing via 'brew install kreuzberg-dev/tap/kreuzberg' ..."
-  if brew install kreuzberg-dev/tap/kreuzberg >&2; then
+  log "installing via 'brew install xberg-io/tap/kreuzberg' ..."
+  if brew install xberg-io/tap/kreuzberg >&2; then
     if have "$BINARY_NAME"; then
       BREW_BIN="$(command -v "$BINARY_NAME")"
       runnable "$BREW_BIN" && exec "$BREW_BIN" "$@"
@@ -174,7 +174,7 @@ try_download() {
   esac
 
   # No version in the asset name; pull from the latest release directly.
-  base_url="https://github.com/kreuzberg-dev/kreuzberg/releases/latest/download"
+  base_url="https://github.com/xberg-io/kreuzberg/releases/latest/download"
   asset="kreuzberg-cli-${triple}.${ext}"
   asset_url="${base_url}/${asset}"
 
@@ -246,7 +246,7 @@ fi
 
 # ---- (f) Give up ------------------------------------------------------------
 die "could not locate or install kreuzberg. Install it manually with one of:
-  brew install kreuzberg-dev/tap/kreuzberg
-  cargo install --git https://github.com/kreuzberg-dev/kreuzberg kreuzberg-cli
-  or download a prebuilt archive from https://github.com/kreuzberg-dev/kreuzberg/releases/latest
+  brew install xberg-io/tap/kreuzberg
+  cargo install --git https://github.com/xberg-io/kreuzberg kreuzberg-cli
+  or download a prebuilt archive from https://github.com/xberg-io/kreuzberg/releases/latest
 then ensure 'kreuzberg' is on PATH and retry."

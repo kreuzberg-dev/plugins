@@ -24,7 +24,7 @@ binding for your language installs separately:
 
 ```bash
 # the CLI (proxy + MCP server):
-brew install kreuzberg-dev/tap/liter-llm   # or: npx @kreuzberg/liter-llm-cli / uvx --from liter-llm liter-llm
+brew install xberg-io/tap/liter-llm   # or: npx @kreuzberg/liter-llm-cli / uvx --from liter-llm liter-llm
 # language SDKs/bindings (libraries, not the CLI):
 pip install liter-llm                      # Python binding
 pnpm add @kreuzberg/liter-llm-node         # Node.js binding
@@ -53,4 +53,4 @@ keys — read them from environment variables (`OPENAI_API_KEY`,
 both auto-discover from the cwd upward.
 
 For installation instructions across other agents and the marketplace, see the
-[plugins repo README](https://github.com/kreuzberg-dev/plugins).
+[plugins repo README](https://github.com/xberg-io/plugins).

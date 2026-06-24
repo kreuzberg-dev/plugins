@@ -6,8 +6,8 @@
 
 ## Implemented setup
 
-- `kreuzberg/server.json` publishes `io.github.kreuzberg-dev/kreuzberg` via `ghcr.io/kreuzberg-dev/kreuzberg-cli:<version>`.
-- `kreuzcrawl/server.json` publishes `io.github.kreuzberg-dev/kreuzcrawl` via `ghcr.io/kreuzberg-dev/kreuzcrawl:<version>`.
+- `kreuzberg/server.json` publishes `io.github.xberg-io/kreuzberg` via `ghcr.io/xberg-io/kreuzberg-cli:<version>`.
+- `kreuzcrawl/server.json` publishes `io.github.xberg-io/kreuzcrawl` via `ghcr.io/xberg-io/kreuzcrawl:<version>`.
 - Both Dockerfiles now add `io.modelcontextprotocol.server.name`.
 - Both Docker publish workflows stamp release versions into `server.release.json`, run `mcp-publisher login github-oidc`, and publish after Docker image publication.
 

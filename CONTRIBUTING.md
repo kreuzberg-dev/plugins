@@ -7,7 +7,7 @@ Contributions are welcome. Follow these guidelines to maintain consistency acros
 Clone the repo and set up your harness.
 
 ```bash
-git clone https://github.com/kreuzberg-dev/plugins
+git clone https://github.com/xberg-io/plugins
 cd plugins
 ```
 
@@ -46,7 +46,7 @@ license: MIT
 metadata:
   author: kreuzberg-dev
   version: "0.1.0"
-  repository: https://github.com/kreuzberg-dev/<tool>
+  repository: https://github.com/xberg-io/<tool>
 ---
 ```
 

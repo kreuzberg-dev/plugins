@@ -13,7 +13,7 @@ Pending review for official Claude marketplace.
 Self-host:
 
 ```text
-/plugin marketplace add kreuzberg-dev/plugins
+/plugin marketplace add xberg-io/plugins
 /plugin install tree-sitter-language-pack@kreuzberg
 ```
 
@@ -27,14 +27,14 @@ GitHub release. No manual install is required to use the MCP server.
 To install the `ts-pack` CLI yourself:
 
 ```bash
-brew install kreuzberg-dev/tap/ts-pack
+brew install xberg-io/tap/ts-pack
 # or run it without a persistent install (the CLI proxy package self-installs the binary):
 npx @kreuzberg/ts-pack-cli --help
 uvx --from ts-pack-cli ts-pack --help
 # or download a prebuilt binary from the latest GitHub release:
-#   https://github.com/kreuzberg-dev/tree-sitter-language-pack/releases/latest
+#   https://github.com/xberg-io/tree-sitter-language-pack/releases/latest
 # or build from source (binary is installed as `ts-pack`):
-cargo install --git https://github.com/kreuzberg-dev/tree-sitter-language-pack ts-pack-cli
+cargo install --git https://github.com/xberg-io/tree-sitter-language-pack ts-pack-cli
 ```
 
 Parser libraries download on demand the first time a language is used. For
@@ -181,10 +181,10 @@ The plugin version tracks the marketplace `VERSION` file. See [CHANGELOG.md](../
 
 ## License
 
-MIT. The upstream [tree-sitter-language-pack](https://github.com/kreuzberg-dev/tree-sitter-language-pack) library is also MIT-licensed.
+MIT. The upstream [tree-sitter-language-pack](https://github.com/xberg-io/tree-sitter-language-pack) library is also MIT-licensed.
 
 ## See also
 
-- **Marketplace**: [kreuzberg-dev/plugins](https://github.com/kreuzberg-dev/plugins)
-- **Upstream**: [kreuzberg-dev/tree-sitter-language-pack](https://github.com/kreuzberg-dev/tree-sitter-language-pack)
+- **Marketplace**: [xberg-io/plugins](https://github.com/xberg-io/plugins)
+- **Upstream**: [xberg-io/tree-sitter-language-pack](https://github.com/xberg-io/tree-sitter-language-pack)
 - **Sibling plugins**: [kreuzberg](../kreuzberg/README.md), [kreuzcrawl](../kreuzcrawl/README.md), [kreuzberg-cloud](../kreuzberg-cloud/README.md)

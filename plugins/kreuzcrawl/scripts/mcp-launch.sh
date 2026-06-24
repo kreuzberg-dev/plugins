@@ -16,7 +16,7 @@
 #      version are decoupled.
 #   b) npx: probe the published npm package, and if it exposes the CLI, run it.
 #   c) uvx: probe the published PyPI package, and if it exposes the CLI, run it.
-#   d) brew install kreuzberg-dev/tap/kreuzcrawl, then exec the on-PATH binary.
+#   d) brew install xberg-io/tap/kreuzcrawl, then exec the on-PATH binary.
 #   e) Direct download of the prebuilt CLI archive from the GitHub *latest*
 #      release. The current latest release ships NO CLI asset, so this 404s and
 #      falls through; it self-heals once a CLI archive is attached.
@@ -119,8 +119,8 @@ fi
 
 # ---- (d) Homebrew -----------------------------------------------------------
 if want brew && have brew; then
-  log "installing via 'brew install kreuzberg-dev/tap/kreuzcrawl' ..."
-  if brew install kreuzberg-dev/tap/kreuzcrawl >&2; then
+  log "installing via 'brew install xberg-io/tap/kreuzcrawl' ..."
+  if brew install xberg-io/tap/kreuzcrawl >&2; then
     if have "$BINARY_NAME"; then
       BREW_BIN="$(command -v "$BINARY_NAME")"
       runs_ok "$BREW_BIN" && exec "$BREW_BIN" "$@"
@@ -172,7 +172,7 @@ download_install() {
   *) ext="tar.gz" ;;
   esac
 
-  base_url="https://github.com/kreuzberg-dev/kreuzcrawl/releases/latest/download"
+  base_url="https://github.com/xberg-io/kreuzcrawl/releases/latest/download"
   asset="kreuzcrawl-cli-${triple}.${ext}"
   asset_url="${base_url}/${asset}"
 
@@ -240,7 +240,7 @@ fi
 
 # ---- (f) Give up ------------------------------------------------------------
 die "could not locate or install a kreuzcrawl binary. Install one manually:
-  brew install kreuzberg-dev/tap/kreuzcrawl
-  cargo install --git https://github.com/kreuzberg-dev/kreuzcrawl kreuzcrawl-cli --features all
-or download a release from https://github.com/kreuzberg-dev/kreuzcrawl/releases/latest
+  brew install xberg-io/tap/kreuzcrawl
+  cargo install --git https://github.com/xberg-io/kreuzcrawl kreuzcrawl-cli --features all
+or download a release from https://github.com/xberg-io/kreuzcrawl/releases/latest
 then ensure 'kreuzcrawl' is on PATH (or place it at $BIN)."

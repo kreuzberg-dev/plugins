@@ -51,4 +51,4 @@ is queued, ask whether to poll or rely on the user's webhook.
 
 For installation across hosts (Claude Code, Codex, Cursor, opencode,
 Gemini), see the marketplace
-[README](https://github.com/kreuzberg-dev/plugins).
+[README](https://github.com/xberg-io/plugins).

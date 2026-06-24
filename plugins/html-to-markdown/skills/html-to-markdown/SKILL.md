@@ -10,7 +10,7 @@ license: MIT
 metadata:
   author: kreuzberg-dev
   version: "0.1.0"
-  repository: https://github.com/kreuzberg-dev/html-to-markdown
+  repository: https://github.com/xberg-io/html-to-markdown
 ---
 
 # html-to-markdown
@@ -46,15 +46,15 @@ Use this skill when writing code that:
 
 ```bash
 # (Homebrew 6.0+ requires explicit trust for third-party taps)
-brew trust kreuzberg-dev/tap
-brew install kreuzberg-dev/tap/html-to-markdown
+brew trust xberg-io/tap
+brew install xberg-io/tap/html-to-markdown
 # or run without a persistent install (the CLI proxy package self-installs the binary):
 npx @kreuzberg/html-to-markdown-cli --help
 uvx --from html-to-markdown-cli html-to-markdown --help
 # or download a prebuilt binary from the latest GitHub release:
-#   https://github.com/kreuzberg-dev/html-to-markdown/releases/latest
+#   https://github.com/xberg-io/html-to-markdown/releases/latest
 # or build from source:
-cargo install --git https://github.com/kreuzberg-dev/html-to-markdown html-to-markdown-cli
+cargo install --git https://github.com/xberg-io/html-to-markdown html-to-markdown-cli
 ```
 
 ### Language SDKs
@@ -64,15 +64,15 @@ pip install html-to-markdown                                # Python
 npm install @kreuzberg/html-to-markdown                      # TypeScript / Node.js
 cargo add html-to-markdown-rs                                # Rust (features: metadata default; full = all)
 gem install html-to-markdown                                 # Ruby
-composer require kreuzberg-dev/html-to-markdown              # PHP
-go get github.com/kreuzberg-dev/html-to-markdown/packages/go/v3   # Go
+composer require xberg-io/html-to-markdown              # PHP
+go get github.com/xberg-io/html-to-markdown/packages/go/v3   # Go
 dotnet add package KreuzbergDev.HtmlToMarkdown               # C#
 npm install @kreuzberg/html-to-markdown-wasm                 # WASM
 ```
 
 - Java (Maven): `dev.kreuzberg:html-to-markdown`
 - Elixir: `{:html_to_markdown, "~> 3.6"}` in `mix.exs`
-- R: `install.packages("htmltomarkdown", repos = "https://kreuzberg-dev.r-universe.dev")`
+- R: `install.packages("htmltomarkdown", repos = "https://xberg-io.r-universe.dev")`
 - C (FFI): pre-built `.so` / `.dll` / `.dylib` from GitHub releases
 
 ## CLI vs SDK — which to use
@@ -232,4 +232,4 @@ Enable structure extraction (`--include-structure` on the CLI, `include_document
 - **[TypeScript API Reference](references/typescript-api.md)** — functions, interfaces, Buffer support
 - **[Other Bindings](references/other-bindings.md)** — Go, Ruby, PHP, Java, C#, Elixir, R, WASM, C FFI
 
-GitHub: <https://github.com/kreuzberg-dev/html-to-markdown>
+GitHub: <https://github.com/xberg-io/html-to-markdown>

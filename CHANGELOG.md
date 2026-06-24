@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Switch the repo to **pnpm** workspaces (`pnpm-workspace.yaml` + `pnpm-lock.yaml`); upgrade dependencies to latest; CI installs/publishes via pnpm.
-- Align `.pre-commit-config.yaml` with the shared `kreuzberg-dev/pre-commit-hooks` set (adds actionlint, shebang checks, `gh-actions-updater`, and `typos`); repo lints clean.
+- Align `.pre-commit-config.yaml` with the shared `xberg-io/pre-commit-hooks` set (adds actionlint, shebang checks, `gh-actions-updater`, and `typos`); repo lints clean.
 
 ## [0.2.1] - 2026-06-20
 
@@ -52,5 +52,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Self-hosted marketplace for all harnesses
 - Contributing guidelines and security policy
 
-[Unreleased]: https://github.com/kreuzberg-dev/plugins/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/kreuzberg-dev/plugins/releases/tag/v0.1.0
+[Unreleased]: https://github.com/xberg-io/plugins/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/xberg-io/plugins/releases/tag/v0.1.0

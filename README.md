@@ -4,9 +4,9 @@ Document-intelligence plugins for coding agents. Install any of the six into Cla
 
 ## Badges
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/kreuzberg-dev/plugins/blob/main/LICENSE)
-[![Version: 0.2.2](https://img.shields.io/badge/version-0.2.2-blue.svg)](https://github.com/kreuzberg-dev/plugins/releases)
-[![GitHub stars](https://img.shields.io/github/stars/kreuzberg-dev/plugins?style=social)](https://github.com/kreuzberg-dev/plugins)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/xberg-io/plugins/blob/main/LICENSE)
+[![Version: 0.2.2](https://img.shields.io/badge/version-0.2.2-blue.svg)](https://github.com/xberg-io/plugins/releases)
+[![GitHub stars](https://img.shields.io/github/stars/xberg-io/plugins?style=social)](https://github.com/xberg-io/plugins)
 [![Discord](https://img.shields.io/badge/Discord-Chat-007ec6?logo=discord&logoColor=white)](https://discord.gg/xt9WY3GnKR)
 
 ## What You Get
@@ -39,7 +39,7 @@ Once approved by the marketplace:
 Self-host (works today):
 
 ```text
-/plugin marketplace add kreuzberg-dev/plugins
+/plugin marketplace add xberg-io/plugins
 /plugin install kreuzberg@kreuzberg
 /plugin install kreuzcrawl@kreuzberg
 /plugin install kreuzberg-cloud@kreuzberg
@@ -57,7 +57,7 @@ Pending review for official Claude marketplace.
 Codex CLI marketplace is not yet open for third-party submissions. Use self-hosted install:
 
 ```text
-/plugins add https://github.com/kreuzberg-dev/plugins
+/plugins add https://github.com/xberg-io/plugins
 ```
 
 Then search for the plugin you want — e.g. `kreuzberg`, `kreuzcrawl`, `html-to-markdown`, `liter-llm`, `tree-sitter-language-pack`, or `kreuzberg-cloud` — and select "Install Plugin".
@@ -68,7 +68,7 @@ Then search for the plugin you want — e.g. `kreuzberg`, `kreuzcrawl`, `html-to
 
 Self-host install only:
 
-Settings → Plugins → Add from URL → `https://github.com/kreuzberg-dev/plugins`. Select the plugin(s) you want.
+Settings → Plugins → Add from URL → `https://github.com/xberg-io/plugins`. Select the plugin(s) you want.
 </details>
 
 <details>
@@ -77,7 +77,7 @@ Settings → Plugins → Add from URL → `https://github.com/kreuzberg-dev/plug
 Self-host install:
 
 ```text
-gemini extensions install https://github.com/kreuzberg-dev/plugins
+gemini extensions install https://github.com/xberg-io/plugins
 ```
 
 </details>
@@ -88,7 +88,7 @@ gemini extensions install https://github.com/kreuzberg-dev/plugins
 Self-host install:
 
 ```text
-droid plugin marketplace add https://github.com/kreuzberg-dev/plugins
+droid plugin marketplace add https://github.com/xberg-io/plugins
 droid plugin install kreuzberg@kreuzberg
 droid plugin install kreuzcrawl@kreuzberg
 droid plugin install kreuzberg-cloud@kreuzberg
@@ -106,7 +106,7 @@ Pending review for official Factory Droid marketplace.
 Self-host install:
 
 ```text
-copilot plugin marketplace add https://github.com/kreuzberg-dev/plugins
+copilot plugin marketplace add https://github.com/xberg-io/plugins
 copilot plugin install kreuzberg@kreuzberg
 copilot plugin install kreuzcrawl@kreuzberg
 copilot plugin install kreuzberg-cloud@kreuzberg
@@ -143,12 +143,12 @@ Each plugin shells out to a real CLI. Install whichever you use:
 
 | Plugin | Binary | Install |
 |--------|--------|---------|
-| kreuzberg | `kreuzberg` | `brew install kreuzberg-dev/tap/kreuzberg` |
-| kreuzcrawl | `kreuzcrawl` | `brew install kreuzberg-dev/tap/kreuzcrawl` |
+| kreuzberg | `kreuzberg` | `brew install xberg-io/tap/kreuzberg` |
+| kreuzcrawl | `kreuzcrawl` | `brew install xberg-io/tap/kreuzcrawl` |
 | kreuzberg-cloud | `kreuzberg-cloud` (v0.2.0) | — (skills-only in v0.1.0) |
-| html-to-markdown | `html-to-markdown` | `brew install kreuzberg-dev/tap/html-to-markdown` |
-| liter-llm | `liter-llm` | `brew install kreuzberg-dev/tap/liter-llm` |
-| tree-sitter-language-pack | `tree-sitter-language-pack` | `brew install kreuzberg-dev/tap/tree-sitter-language-pack` |
+| html-to-markdown | `html-to-markdown` | `brew install xberg-io/tap/html-to-markdown` |
+| liter-llm | `liter-llm` | `brew install xberg-io/tap/liter-llm` |
+| tree-sitter-language-pack | `tree-sitter-language-pack` | `brew install xberg-io/tap/tree-sitter-language-pack` |
 
 For `kreuzberg-cloud`, set the API key via `KREUZBERG_API_KEY` environment variable or `~/.kreuzberg/cloud.toml`.
 
@@ -213,7 +213,7 @@ Yes. Fork the repo, edit the skill SKILL.md, and use `/plugin marketplace add <l
 
 **How do I report a broken skill?**
 
-Open an issue at [kreuzberg-dev/plugins](https://github.com/kreuzberg-dev/plugins/issues) with the plugin name, agent harness, and exact request that failed.
+Open an issue at [xberg-io/plugins](https://github.com/xberg-io/plugins/issues) with the plugin name, agent harness, and exact request that failed.
 
 **When will the kreuzberg-cloud MCP server arrive?**
 
@@ -225,10 +225,10 @@ MIT. See [LICENSE](LICENSE).
 
 ## Part of Kreuzberg.dev
 
-- [Kreuzberg](https://github.com/kreuzberg-dev/kreuzberg) — document intelligence: text, tables, metadata from 91+ formats with optional OCR.
-- [Kreuzberg Cloud](https://github.com/kreuzberg-dev/kreuzberg-cloud) — managed extraction API with SDKs, dashboards, and observability.
-- [kreuzcrawl](https://github.com/kreuzberg-dev/kreuzcrawl) — web crawling and scraping with HTML→Markdown and headless-Chrome fallback.
-- [html-to-markdown](https://github.com/kreuzberg-dev/html-to-markdown) — fast, lossless HTML→Markdown engine.
-- [liter-llm](https://github.com/kreuzberg-dev/liter-llm) — universal LLM API client with native bindings for 14 languages and 143 providers.
-- [tree-sitter-language-pack](https://github.com/kreuzberg-dev/tree-sitter-language-pack) — tree-sitter grammars and code-intelligence primitives.
-- [alef](https://github.com/kreuzberg-dev/alef) — the polyglot binding generator that produces every per-language binding across the 5 polyglot repos.
+- [Kreuzberg](https://github.com/xberg-io/kreuzberg) — document intelligence: text, tables, metadata from 91+ formats with optional OCR.
+- [Kreuzberg Cloud](https://github.com/xberg-io/kreuzberg-cloud) — managed extraction API with SDKs, dashboards, and observability.
+- [kreuzcrawl](https://github.com/xberg-io/kreuzcrawl) — web crawling and scraping with HTML→Markdown and headless-Chrome fallback.
+- [html-to-markdown](https://github.com/xberg-io/html-to-markdown) — fast, lossless HTML→Markdown engine.
+- [liter-llm](https://github.com/xberg-io/liter-llm) — universal LLM API client with native bindings for 14 languages and 143 providers.
+- [tree-sitter-language-pack](https://github.com/xberg-io/tree-sitter-language-pack) — tree-sitter grammars and code-intelligence primitives.
+- [alef](https://github.com/xberg-io/alef) — the polyglot binding generator that produces every per-language binding across the 5 polyglot repos.

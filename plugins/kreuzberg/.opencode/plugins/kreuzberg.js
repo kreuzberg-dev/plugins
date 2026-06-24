@@ -56,7 +56,7 @@ function runCli(args, context) {
         resolve({
           title: "kreuzberg CLI not found",
           output:
-            "Install the kreuzberg CLI with `brew install kreuzberg-dev/tap/kreuzberg`, or run it via `npx kreuzberg` / `uvx --from kreuzberg kreuzberg`.",
+            "Install the kreuzberg CLI with `brew install xberg-io/tap/kreuzberg`, or run it via `npx kreuzberg` / `uvx --from kreuzberg kreuzberg`.",
           metadata: { exitCode: 127, command: "kreuzberg", subcommand: args[0] },
         });
         return;

@@ -11,7 +11,7 @@ license: MIT
 metadata:
   author: kreuzberg-dev
   version: "0.1.0"
-  repository: https://github.com/kreuzberg-dev/tree-sitter-language-pack
+  repository: https://github.com/xberg-io/tree-sitter-language-pack
 ---
 
 # Tree-Sitter Language Pack
@@ -75,14 +75,14 @@ should call parsing directly as a tool.
 ### CLI
 
 ```bash
-brew install kreuzberg-dev/tap/ts-pack
+brew install xberg-io/tap/ts-pack
 # or run without a persistent install (the CLI proxy package self-installs the binary):
 npx @kreuzberg/ts-pack-cli --help
 uvx --from ts-pack-cli ts-pack --help
 # or download a prebuilt binary from the latest GitHub release:
-#   https://github.com/kreuzberg-dev/tree-sitter-language-pack/releases/latest
+#   https://github.com/xberg-io/tree-sitter-language-pack/releases/latest
 # or build from source:
-cargo install --git https://github.com/kreuzberg-dev/tree-sitter-language-pack ts-pack-cli
+cargo install --git https://github.com/xberg-io/tree-sitter-language-pack ts-pack-cli
 # binary is installed as `ts-pack`
 ```
 
@@ -111,7 +111,7 @@ tree-sitter-language-pack = { version = "1", features = ["download"] }
 Other bindings: Ruby (`gem install tree_sitter_language_pack`), Go, Java,
 C#, PHP, Elixir, and WebAssembly
 (`npm install @kreuzberg/tree-sitter-language-pack-wasm`). See
-<https://github.com/kreuzberg-dev/tree-sitter-language-pack>.
+<https://github.com/xberg-io/tree-sitter-language-pack>.
 
 ## CLI surface
 
@@ -214,4 +214,4 @@ See the `managing-parsers` skill for the full cache workflow.
 - `using-the-mcp-server` — call `parse`/`process`/`detect` over MCP instead of
   the CLI.
 
-Full documentation: <https://github.com/kreuzberg-dev/tree-sitter-language-pack>
+Full documentation: <https://github.com/xberg-io/tree-sitter-language-pack>

@@ -10,7 +10,7 @@ license: Elastic-2.0
 metadata:
   author: kreuzberg-dev
   version: "0.1.0"
-  repository: https://github.com/kreuzberg-dev/kreuzberg
+  repository: https://github.com/xberg-io/kreuzberg
 ---
 
 # Kreuzberg Document Extraction
@@ -56,14 +56,14 @@ kreuzberg = { version = "4", features = ["tokio-runtime"] }
 ### CLI
 
 ```bash
-brew install kreuzberg-dev/tap/kreuzberg
+brew install xberg-io/tap/kreuzberg
 # or run without a persistent install (the CLI proxy package self-installs the binary):
 npx @kreuzberg/kreuzberg-cli --help
 uvx --from kreuzberg-cli kreuzberg --help
 # or download a prebuilt binary from the latest GitHub release:
-#   https://github.com/kreuzberg-dev/kreuzberg/releases/latest
+#   https://github.com/xberg-io/kreuzberg/releases/latest
 # or build from source:
-cargo install --git https://github.com/kreuzberg-dev/kreuzberg kreuzberg-cli
+cargo install --git https://github.com/xberg-io/kreuzberg kreuzberg-cli
 ```
 
 ## Quick Start
@@ -433,4 +433,4 @@ Task-focused sibling skills go deeper than this overview:
 - **picking-a-format** — choosing `--format` / `--content-format` per consumer.
 
 Full documentation: <https://docs.kreuzberg.dev>
-GitHub: <https://github.com/kreuzberg-dev/kreuzberg>
+GitHub: <https://github.com/xberg-io/kreuzberg>

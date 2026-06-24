@@ -11,7 +11,7 @@ license: MIT
 metadata:
   author: kreuzberg-dev
   version: "0.1.0"
-  repository: https://github.com/kreuzberg-dev/kreuzberg-cloud
+  repository: https://github.com/xberg-io/kreuzberg-cloud
 ---
 
 # Kreuzberg Cloud

@@ -60,4 +60,4 @@ curl http://localhost:4000/v1/chat/completions \
 - The OpenAPI 3.1 spec is served at `/openapi.json`.
 - Endpoints cover chat, embeddings, images, audio, moderations, files, batches,
   responses, and model listing.
-- Docker: `docker run -p 4000:4000 -e LITER_LLM_MASTER_KEY=sk-key ghcr.io/kreuzberg-dev/liter-llm`.
+- Docker: `docker run -p 4000:4000 -e LITER_LLM_MASTER_KEY=sk-key ghcr.io/xberg-io/liter-llm`.

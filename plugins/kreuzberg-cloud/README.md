@@ -13,7 +13,7 @@ Pending review for official Claude marketplace.
 Self-host:
 
 ```text
-/plugin marketplace add kreuzberg-dev/plugins
+/plugin marketplace add xberg-io/plugins
 /plugin install kreuzberg-cloud@kreuzberg
 ```
 
@@ -108,6 +108,6 @@ MIT.
 
 ## See also
 
-- **Marketplace**: [kreuzberg-dev/plugins](https://github.com/kreuzberg-dev/plugins)
-- **Upstream**: [kreuzberg-dev/kreuzberg-cloud](https://github.com/kreuzberg-dev/kreuzberg-cloud)
+- **Marketplace**: [xberg-io/plugins](https://github.com/xberg-io/plugins)
+- **Upstream**: [xberg-io/kreuzberg-cloud](https://github.com/xberg-io/kreuzberg-cloud)
 - **Sibling plugins**: [kreuzberg](../kreuzberg/README.md), [kreuzcrawl](../kreuzcrawl/README.md)

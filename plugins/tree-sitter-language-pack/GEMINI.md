@@ -13,11 +13,11 @@ to the `ts-pack` binary (or call the language SDKs). Install the CLI
 separately:
 
 ```bash
-brew install kreuzberg-dev/tap/ts-pack
+brew install xberg-io/tap/ts-pack
 # or run without a persistent install (the npm package's bin is `tspack`):
 npx @kreuzberg/ts-pack-cli --help
 # or download a prebuilt binary from the latest GitHub release, or build from source:
-cargo install --git https://github.com/kreuzberg-dev/tree-sitter-language-pack ts-pack-cli
+cargo install --git https://github.com/xberg-io/tree-sitter-language-pack ts-pack-cli
 # binary is installed as `ts-pack`
 ```
 
@@ -53,4 +53,4 @@ asked for. For offline or CI work, prefetch parsers with `ts-pack download`
 before parsing.
 
 For installation across other agents and the marketplace, see the
-[plugins repo README](https://github.com/kreuzberg-dev/plugins).
+[plugins repo README](https://github.com/xberg-io/plugins).

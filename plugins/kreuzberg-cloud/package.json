@@ -15,12 +15,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kreuzberg-dev/plugins.git",
+    "url": "git+https://github.com/xberg-io/plugins.git",
     "directory": "plugins/kreuzberg-cloud"
   },
-  "homepage": "https://github.com/kreuzberg-dev/plugins/tree/main/plugins/kreuzberg-cloud",
+  "homepage": "https://github.com/xberg-io/plugins/tree/main/plugins/kreuzberg-cloud",
   "bugs": {
-    "url": "https://github.com/kreuzberg-dev/plugins/issues"
+    "url": "https://github.com/xberg-io/plugins/issues"
   },
   "license": "MIT",
   "keywords": [

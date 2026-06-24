@@ -61,7 +61,7 @@ function runCli(args, context) {
         resolve({
           title: "kreuzcrawl CLI not found",
           output:
-            "Install the kreuzcrawl CLI with `brew install kreuzberg-dev/tap/kreuzcrawl`, or run it via `npx kreuzcrawl` / `uvx --from kreuzcrawl kreuzcrawl`.",
+            "Install the kreuzcrawl CLI with `brew install xberg-io/tap/kreuzcrawl`, or run it via `npx kreuzcrawl` / `uvx --from kreuzcrawl kreuzcrawl`.",
           metadata: { exitCode: 127, command: "kreuzcrawl", subcommand: args[0] },
         });
         return;

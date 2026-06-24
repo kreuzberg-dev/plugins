@@ -41,9 +41,9 @@ Out of scope:
 
 For vulnerabilities in the kreuzberg core, kreuzberg-cloud, or kreuzcrawl, report to their respective repositories:
 
-- [kreuzberg](https://github.com/kreuzberg-dev/kreuzberg)
-- [kreuzberg-cloud](https://github.com/kreuzberg-dev/kreuzberg-cloud)
-- [kreuzcrawl](https://github.com/kreuzberg-dev/kreuzcrawl)
+- [kreuzberg](https://github.com/xberg-io/kreuzberg)
+- [kreuzberg-cloud](https://github.com/xberg-io/kreuzberg-cloud)
+- [kreuzcrawl](https://github.com/xberg-io/kreuzcrawl)
 
 ## General Security Practices
 

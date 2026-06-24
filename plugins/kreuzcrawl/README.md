@@ -13,7 +13,7 @@ Pending review for official Claude marketplace.
 Self-host:
 
 ```text
-/plugin marketplace add kreuzberg-dev/plugins
+/plugin marketplace add xberg-io/plugins
 /plugin install kreuzcrawl@kreuzberg
 ```
 
@@ -24,12 +24,12 @@ The MCP server runs through an auto-installing launcher (`scripts/mcp-launch.sh`
 To install the CLI yourself (recommended for direct CLI use, and reused by the launcher):
 
 ```bash
-brew install kreuzberg-dev/tap/kreuzcrawl
+brew install xberg-io/tap/kreuzcrawl
 # or run it without a persistent install (the CLI proxy package self-installs the binary):
 npx @kreuzberg/kreuzcrawl-cli --help
 uvx --from kreuzcrawl-cli kreuzcrawl --help
 # or build from source (the mcp/api subcommands are non-default features):
-cargo install --git https://github.com/kreuzberg-dev/kreuzcrawl kreuzcrawl-cli --features all
+cargo install --git https://github.com/xberg-io/kreuzcrawl kreuzcrawl-cli --features all
 ```
 
 The published npm (`@kreuzberg/kreuzcrawl`) and PyPI (`kreuzcrawl`) packages are language *library* bindings, not the CLI — install via Homebrew or the from-source build above for the `kreuzcrawl` binary.
@@ -111,6 +111,6 @@ MIT.
 
 ## See also
 
-- **Marketplace**: [kreuzberg-dev/plugins](https://github.com/kreuzberg-dev/plugins)
-- **Upstream**: [kreuzberg-dev/kreuzcrawl](https://github.com/kreuzberg-dev/kreuzcrawl)
+- **Marketplace**: [xberg-io/plugins](https://github.com/xberg-io/plugins)
+- **Upstream**: [xberg-io/kreuzcrawl](https://github.com/xberg-io/kreuzcrawl)
 - **Sibling plugins**: [kreuzberg](../kreuzberg/README.md), [kreuzberg-cloud](../kreuzberg-cloud/README.md)

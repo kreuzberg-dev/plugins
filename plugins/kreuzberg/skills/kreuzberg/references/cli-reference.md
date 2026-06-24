@@ -5,16 +5,16 @@ Comprehensive command-line interface for the Kreuzberg document intelligence lib
 ## Installation
 
 ```bash
-brew install kreuzberg-dev/tap/kreuzberg
+brew install xberg-io/tap/kreuzberg
 # or run without a persistent install (self-installs the binary):
 npx @kreuzberg/kreuzberg-cli --help
 uvx --from kreuzberg kreuzberg --help
 ```
 
-Or download a pre-built binary from the [latest GitHub Release](https://github.com/kreuzberg-dev/kreuzberg/releases/latest), or build from source:
+Or download a pre-built binary from the [latest GitHub Release](https://github.com/xberg-io/kreuzberg/releases/latest), or build from source:
 
 ```bash
-cargo install --git https://github.com/kreuzberg-dev/kreuzberg kreuzberg-cli
+cargo install --git https://github.com/xberg-io/kreuzberg kreuzberg-cli
 ```
 
 ## Commands

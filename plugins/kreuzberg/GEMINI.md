@@ -17,12 +17,12 @@ unreachable.
 The CLI must be installed separately:
 
 ```bash
-brew install kreuzberg-dev/tap/kreuzberg
+brew install xberg-io/tap/kreuzberg
 # or run it without a persistent install (self-installs the binary):
 npx @kreuzberg/kreuzberg-cli --help
 uvx --from kreuzberg kreuzberg --help
 # or download a prebuilt binary from the latest GitHub release, or build from source:
-cargo install --git https://github.com/kreuzberg-dev/kreuzberg kreuzberg-cli
+cargo install --git https://github.com/xberg-io/kreuzberg kreuzberg-cli
 ```
 
 ## Skills in this plugin
@@ -46,4 +46,4 @@ When configuration gets non-trivial, prefer a `kreuzberg.toml` over long flag
 chains — Kreuzberg auto-discovers it in the cwd and parents.
 
 For installation instructions across other agents and the marketplace, see
-the [plugins repo README](https://github.com/kreuzberg-dev/plugins).
+the [plugins repo README](https://github.com/xberg-io/plugins).
