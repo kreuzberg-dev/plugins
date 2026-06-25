@@ -9,7 +9,7 @@
 
 ## Reporting Vulnerabilities
 
-Do not open public GitHub issues for security vulnerabilities. Email `security@kreuzberg.dev` instead with:
+Do not open public GitHub issues for security vulnerabilities. Email `security@xberg.io` instead with:
 
 - Plugin name and version
 - Vulnerability description
