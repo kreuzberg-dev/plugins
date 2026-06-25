@@ -83,13 +83,13 @@ npm install @kreuzberg/html-to-markdown-wasm                 # WASM
 
 Both share the same `ConversionResult` shape, so output is interchangeable.
 
-## When to use html-to-markdown vs kreuzberg vs kreuzcrawl
+## When to use html-to-markdown vs kreuzberg vs crawlberg
 
 - **html-to-markdown** — you already have HTML (a string, a file, or a single URL) and want clean Markdown plus structured metadata/tables. No OCR, no document parsing, no crawling.
 - **kreuzberg** — you have *documents* (PDF, Office, images, email, archives) and need full text/table/metadata extraction with optional OCR. Use it when the input is not already HTML.
-- **kreuzcrawl** — you need to *crawl or scrape many pages*, follow links, and handle JS-rendered sites with a headless-Chrome fallback. It uses html-to-markdown internally for the HTML→Markdown step.
+- **crawlberg** — you need to *crawl or scrape many pages*, follow links, and handle JS-rendered sites with a headless-Chrome fallback. It uses html-to-markdown internally for the HTML→Markdown step.
 
-Rule of thumb: single HTML in → Markdown out = html-to-markdown. Many URLs / a site = kreuzcrawl. Non-HTML documents = kreuzberg.
+Rule of thumb: single HTML in → Markdown out = html-to-markdown. Many URLs / a site = crawlberg. Non-HTML documents = kreuzberg.
 
 ## CLI quick start
 

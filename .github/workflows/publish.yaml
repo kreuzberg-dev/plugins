@@ -50,7 +50,7 @@ jobs:
         run: >-
           pnpm
           --filter @kreuzberg/opencode-kreuzberg
-          --filter @kreuzberg/opencode-kreuzcrawl
+          --filter @kreuzberg/opencode-crawlberg
           --filter @kreuzberg/opencode-html-to-markdown
           --filter @kreuzberg/opencode-tree-sitter-language-pack
           publish --dry-run --no-git-checks
@@ -60,7 +60,7 @@ jobs:
         run: >-
           pnpm
           --filter @kreuzberg/opencode-kreuzberg
-          --filter @kreuzberg/opencode-kreuzcrawl
+          --filter @kreuzberg/opencode-crawlberg
           --filter @kreuzberg/opencode-html-to-markdown
           --filter @kreuzberg/opencode-tree-sitter-language-pack
           publish --access public --provenance --no-git-checks

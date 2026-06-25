@@ -22,7 +22,7 @@ importers:
 
   plugins/xberg-enterprise: {}
 
-  plugins/kreuzcrawl:
+  plugins/crawlberg:
     dependencies:
       '@opencode-ai/plugin':
         specifier: ^1.17.8

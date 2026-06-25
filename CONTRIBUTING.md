@@ -118,7 +118,7 @@ No emojis. Avoid adjectives like "powerful", "smart", "intelligent". Reference t
 Use `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `test:` prefixes:
 
 - `feat: add table extraction skill`
-- `fix: handle missing mime type in kreuzcrawl`
+- `fix: handle missing mime type in crawlberg`
 - `docs: update README install instructions`
 
 Keep commits atomic and focused. One logical change per commit.

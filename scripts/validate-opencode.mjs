@@ -11,9 +11,9 @@ const plugins = [
     tools: ["kreuzberg_extract", "kreuzberg_detect", "kreuzberg_formats"],
   },
   {
-    path: "plugins/kreuzcrawl/.opencode/plugins/kreuzcrawl.js",
-    exportName: "KreuzcrawlPlugin",
-    tools: ["kreuzcrawl_scrape", "kreuzcrawl_crawl", "kreuzcrawl_map"],
+    path: "plugins/crawlberg/.opencode/plugins/crawlberg.js",
+    exportName: "CrawlbergPlugin",
+    tools: ["crawlberg_scrape", "crawlberg_crawl", "crawlberg_map"],
   },
   {
     path: "plugins/xberg-enterprise/.opencode/plugins/xberg-enterprise.js",

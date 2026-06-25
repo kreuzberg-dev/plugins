@@ -9,7 +9,7 @@ Use this when the user gives a URL instead of HTML and wants the page as
 Markdown (or its metadata/tables). The CLI fetches the page over HTTP and
 converts it in one step via `--url`. `--url` conflicts with a positional `FILE`.
 
-For crawling *many* pages or following links, use `kreuzcrawl` instead — this
+For crawling *many* pages or following links, use `crawlberg` instead — this
 skill is for a single URL.
 
 ## Fetch and convert

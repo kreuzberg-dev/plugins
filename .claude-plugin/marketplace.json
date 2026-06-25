@@ -12,8 +12,8 @@
       "description": "Local document extraction: text, tables, metadata, images from 91+ formats with optional OCR."
     },
     {
-      "name": "kreuzcrawl",
-      "source": "./plugins/kreuzcrawl",
+      "name": "crawlberg",
+      "source": "./plugins/crawlberg",
       "description": "Web crawling and scraping with HTML→Markdown and headless-Chrome fallback."
     },
     {

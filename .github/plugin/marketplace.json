@@ -16,10 +16,10 @@
       "source": "./plugins/kreuzberg"
     },
     {
-      "name": "kreuzcrawl",
+      "name": "crawlberg",
       "description": "Web crawling and scraping with HTML→Markdown and headless-Chrome fallback.",
       "version": "0.2.2",
-      "source": "./plugins/kreuzcrawl"
+      "source": "./plugins/crawlberg"
     },
     {
       "name": "xberg-enterprise",

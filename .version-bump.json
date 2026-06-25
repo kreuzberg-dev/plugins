@@ -65,31 +65,31 @@
       "field": "version"
     },
     {
-      "path": "plugins/kreuzcrawl/.claude-plugin/plugin.json",
+      "path": "plugins/crawlberg/.claude-plugin/plugin.json",
       "field": "version"
     },
     {
-      "path": "plugins/kreuzcrawl/.codex-plugin/plugin.json",
+      "path": "plugins/crawlberg/.codex-plugin/plugin.json",
       "field": "version"
     },
     {
-      "path": "plugins/kreuzcrawl/.cursor-plugin/plugin.json",
+      "path": "plugins/crawlberg/.cursor-plugin/plugin.json",
       "field": "version"
     },
     {
-      "path": "plugins/kreuzcrawl/.factory-plugin/plugin.json",
+      "path": "plugins/crawlberg/.factory-plugin/plugin.json",
       "field": "version"
     },
     {
-      "path": "plugins/kreuzcrawl/.github/plugin/plugin.json",
+      "path": "plugins/crawlberg/.github/plugin/plugin.json",
       "field": "version"
     },
     {
-      "path": "plugins/kreuzcrawl/gemini-extension.json",
+      "path": "plugins/crawlberg/gemini-extension.json",
       "field": "version"
     },
     {
-      "path": "plugins/kreuzcrawl/package.json",
+      "path": "plugins/crawlberg/package.json",
       "field": "version"
     },
     {

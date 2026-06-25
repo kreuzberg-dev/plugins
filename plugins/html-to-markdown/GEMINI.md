@@ -43,7 +43,7 @@ intent:
   and want clean Markdown plus structured extraction.
 - **kreuzberg** — you have documents (PDF, Office, images) and need full
   extraction with OCR.
-- **kreuzcrawl** — you need to crawl or scrape many pages with headless-Chrome
+- **crawlberg** — you need to crawl or scrape many pages with headless-Chrome
   fallback.
 
 ## Working with the user
