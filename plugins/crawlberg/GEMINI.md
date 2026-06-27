@@ -37,7 +37,7 @@ brew install xberg-io/tap/crawlberg
 npx @xberg-io/crawlberg-cli --help
 uvx --from crawlberg-cli crawlberg --help
 # or build from source (mcp/api subcommands are non-default features):
-cargo install --git https://github.com/xberg-io/crawlberg crawlberg-cli --features all
+cargo install crawlberg-cli --features all
 ```
 
 ## Skills

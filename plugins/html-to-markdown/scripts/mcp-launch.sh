@@ -18,20 +18,17 @@
 #   c) uvx: probe the published PyPI CLI package, and if it exposes the CLI, run it.
 #   d) brew install xberg-io/tap/html-to-markdown, then exec the on-PATH binary.
 #   e) Direct download of the prebuilt CLI archive from the GitHub LATEST release.
-#   f) Fail with guidance (brew tap, or `cargo install --git` from source).
+#   f) Fail with guidance (brew tap, or `cargo install html-to-markdown-cli` from crates.io).
 #
 # `auto` tries every step in order; an explicit value pins that single channel
 # (each still first honors an already-present binary in step (a)).
 #
-# The html-to-markdown CLI crate is NOT published to crates.io, so `cargo install
-# html-to-markdown-cli` (registry form) does not work and is intentionally
-# absent. The only cargo path that works is `cargo install --git`, which compiles
-# from the repo — see the final guidance below.
+# The html-to-markdown CLI crate is published to crates.io, so `cargo install
+# html-to-markdown-cli` (registry form) works — see the final guidance below.
 #
-# Note on npx/uvx: the html-to-markdown-cli npm and PyPI proxy packages are being
-# rolled out (the package self-installs/runs the binary, basemind-style). They may
-# not be published yet, so each is PROBED first and falls through cleanly if
-# absent. The `@xberg-io/html-to-markdown` npm package and the importable
+# Note on npx/uvx: the html-to-markdown-cli npm and PyPI proxy packages
+# self-install/run the binary (basemind-style). Each is PROBED first and falls
+# through cleanly if absent. The `@xberg-io/html-to-markdown` npm package and the importable
 # `html-to-markdown` pip package are language SDKs/bindings, NOT the CLI — they
 # are not used here.
 #
@@ -254,6 +251,6 @@ fi
 # ---- (f) Give up ------------------------------------------------------------
 die "could not locate or install html-to-markdown. Install it manually with one of:
   brew install xberg-io/tap/html-to-markdown
-  cargo install --git https://github.com/xberg-io/html-to-markdown html-to-markdown-cli
+  cargo install html-to-markdown-cli
   or download a prebuilt archive from https://github.com/${REPO}/releases/latest
 then ensure 'html-to-markdown' is on PATH and retry."

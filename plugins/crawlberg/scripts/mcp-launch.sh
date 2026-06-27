@@ -20,17 +20,16 @@
 #   e) Direct download of the prebuilt CLI archive from the GitHub *latest*
 #      release. The current latest release ships NO CLI asset, so this 404s and
 #      falls through; it self-heals once a CLI archive is attached.
-#   f) Give up with guidance (brew tap, or `cargo install --git` from source
-#      with `--features all`).
+#   f) Give up with guidance (brew tap, or `cargo install crawlberg-cli`
+#      from crates.io with `--features all`).
 #
 # `auto` tries every step in order; an explicit value pins that single channel
 # (each still first honors an already-present binary in step (a)).
 #
-# The crawlberg CLI crate is NOT published to crates.io, so `cargo install
-# crawlberg-cli` (registry form) does not work and is intentionally absent. The
-# only cargo path that works is `cargo install --git`, which compiles from the
-# repo — see the final guidance below. The CLI's `mcp` subcommand lives behind
-# a non-default feature, so the from-source command uses `--features all`.
+# The crawlberg CLI crate is published to crates.io, so `cargo install
+# crawlberg-cli` (registry form) works — see the final guidance below. The
+# CLI's `mcp` subcommand lives behind a non-default feature, so the install
+# command uses `--features all`.
 #
 # Note on npx/uvx: the crawlberg npm and PyPI CLI packages self-install/run the binary
 # (basemind-style). Each is PROBED first and falls through cleanly if absent.
@@ -240,6 +239,6 @@ fi
 # ---- (f) Give up ------------------------------------------------------------
 die "could not locate or install a crawlberg binary. Install one manually:
   brew install xberg-io/tap/crawlberg
-  cargo install --git https://github.com/xberg-io/crawlberg crawlberg-cli --features all
+  cargo install crawlberg-cli --features all
 or download a release from https://github.com/xberg-io/crawlberg/releases/latest
 then ensure 'crawlberg' is on PATH (or place it at $BIN)."

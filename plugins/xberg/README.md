@@ -32,7 +32,7 @@ npx @xberg-io/xberg-cli --help
 uvx --from xberg-cli xberg --help
 ```
 
-Or download a prebuilt binary from the [latest GitHub release](https://github.com/xberg-io/xberg/releases/latest), or build from source (the `xberg-cli` crate is not published to crates.io, so install from git):
+Or download a prebuilt binary from the [latest GitHub release](https://github.com/xberg-io/xberg/releases/latest), or install the CLI from crates.io:
 
 ```bash
 cargo install xberg-cli --features mcp

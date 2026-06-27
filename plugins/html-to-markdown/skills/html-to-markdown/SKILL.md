@@ -54,7 +54,7 @@ uvx --from html-to-markdown-cli html-to-markdown --help
 # or download a prebuilt binary from the latest GitHub release:
 #   https://github.com/xberg-io/html-to-markdown/releases/latest
 # or build from source:
-cargo install --git https://github.com/xberg-io/html-to-markdown html-to-markdown-cli
+cargo install html-to-markdown-cli
 ```
 
 ### Language SDKs

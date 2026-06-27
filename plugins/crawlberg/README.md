@@ -29,7 +29,7 @@ brew install xberg-io/tap/crawlberg
 npx @xberg-io/crawlberg-cli --help
 uvx --from crawlberg-cli crawlberg --help
 # or build from source (the mcp/api subcommands are non-default features):
-cargo install --git https://github.com/xberg-io/crawlberg crawlberg-cli --features all
+cargo install crawlberg-cli --features all
 ```
 
 The published npm (`@xberg-io/crawlberg`) and PyPI (`crawlberg`) packages are language *library* bindings, not the CLI — install via Homebrew or the from-source build above for the `crawlberg` binary.

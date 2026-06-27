@@ -19,7 +19,7 @@ brew install xberg-io/tap/html-to-markdown
 npx @xberg-io/html-to-markdown-cli --help
 uvx --from html-to-markdown html-to-markdown --help
 # or build from source:
-cargo install --git https://github.com/xberg-io/html-to-markdown html-to-markdown-cli
+cargo install html-to-markdown-cli
 ```
 
 ## Skills in this plugin

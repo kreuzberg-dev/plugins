@@ -70,7 +70,7 @@ uvx --from liter-llm-cli liter-llm --help
 #   https://github.com/xberg-io/liter-llm/releases/latest
 
 # or build from source
-cargo install --git https://github.com/xberg-io/liter-llm liter-llm-cli
+cargo install liter-llm-cli
 
 # or Docker (35MB image)
 docker pull ghcr.io/xberg-io/liter-llm

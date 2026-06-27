@@ -36,8 +36,8 @@ npx @xberg-io/liter-llm-cli --help
 uvx --from liter-llm-cli liter-llm --help
 # or download a prebuilt binary from the latest GitHub release:
 #   https://github.com/xberg-io/liter-llm/releases/latest
-# or build the unreleased HEAD from source:
-cargo install --git https://github.com/xberg-io/liter-llm liter-llm-cli
+# or install the CLI from crates.io:
+cargo install liter-llm-cli
 ```
 
 Set provider API keys via environment variables (`OPENAI_API_KEY`,

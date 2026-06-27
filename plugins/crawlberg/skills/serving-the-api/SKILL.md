@@ -16,7 +16,7 @@ Firecrawl clients and SDKs can point at a local crawlberg instance.
 This subcommand requires the binary to be built with the optional `api`
 feature (non-default). The Homebrew tap is built with all features, so `serve`
 is available there; a from-source build needs
-`cargo install --git https://github.com/xberg-io/crawlberg crawlberg-cli --features api`
+`cargo install crawlberg-cli --features api`
 (or `--features all`) to include it.
 
 ## Quick recipe
