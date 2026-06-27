@@ -13,7 +13,7 @@ on:
 
 permissions:
   contents: read
-  id-token: write
+  id-token: write # required for npm Trusted Publishing (OIDC) + provenance
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -37,6 +37,12 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           cache: pnpm
 
+      # Trusted Publishing (OIDC) is an npm-CLI feature and needs npm >= 11.5.1.
+      # We publish with `npm` (not `pnpm`) so the OIDC token exchange happens; no
+      # NPM token is configured — auth comes from the OIDC id-token above.
+      - name: Upgrade npm (trusted publishing support)
+        run: npm install -g npm@latest
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
 
@@ -47,20 +53,32 @@ jobs:
         run: scripts/validate-manifests.sh
 
       - name: Pack opencode packages (validate)
-        run: >-
-          pnpm
-          --filter @xberg-io/opencode-xberg
-          --filter @xberg-io/opencode-crawlberg
-          --filter @xberg-io/opencode-html-to-markdown
-          --filter @xberg-io/opencode-tree-sitter-language-pack
-          publish --dry-run --no-git-checks
+        run: |
+          for dir in \
+            plugins/xberg \
+            plugins/crawlberg \
+            plugins/html-to-markdown \
+            plugins/tree-sitter-language-pack; do
+            echo "::group::pack $dir"
+            (cd "$dir" && npm publish --dry-run --access public)
+            echo "::endgroup::"
+          done
 
-      - name: Publish opencode packages
+      - name: Publish opencode packages (Trusted Publishing + provenance)
         if: ${{ github.event_name == 'release' || inputs.dry_run != true }}
-        run: >-
-          pnpm
-          --filter @xberg-io/opencode-xberg
-          --filter @xberg-io/opencode-crawlberg
-          --filter @xberg-io/opencode-html-to-markdown
-          --filter @xberg-io/opencode-tree-sitter-language-pack
-          publish --access public --provenance --no-git-checks
+        run: |
+          for dir in \
+            plugins/xberg \
+            plugins/crawlberg \
+            plugins/html-to-markdown \
+            plugins/tree-sitter-language-pack; do
+            name="$(node -p "require('./$dir/package.json').name")"
+            ver="$(node -p "require('./$dir/package.json').version")"
+            if npm view "${name}@${ver}" version >/dev/null 2>&1; then
+              echo "skip ${name}@${ver} (already on npm)"
+              continue
+            fi
+            echo "::group::publish ${name}@${ver}"
+            (cd "$dir" && npm publish --access public --provenance)
+            echo "::endgroup::"
+          done
