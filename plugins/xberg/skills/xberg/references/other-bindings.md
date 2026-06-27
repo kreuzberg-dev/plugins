@@ -1,13 +1,15 @@
 # Language Bindings Reference
 
-Xberg provides native bindings for multiple programming languages, each with precompiled binaries for x86_64 and aarch64 on Linux and macOS. This reference covers installation and basic usage for each binding.
+Xberg provides native bindings for many languages, each with precompiled binaries for x86_64 and aarch64 on Linux and macOS. This reference covers installation and basic usage for each binding.
+
+Every binding shares the same shape: build an **`ExtractInput`** (from a URI or bytes), pass it with an **`ExtractionConfig`** to `extract` (or `extract_batch`), and read per-document data from the result **envelope's `results` array** (index `[0]` for a single input). The one exception is WASM, which returns the document directly (no `results` array).
 
 ## Go
 
 **Installation:**
 
 ```bash
-go get github.com/xberg-io/xberg/packages/go/v5
+go get github.com/xberg-io/xberg/packages/go
 ```
 
 **Basic Extraction:**
@@ -16,22 +18,33 @@ go get github.com/xberg-io/xberg/packages/go/v5
 package main
 
 import (
-    "context"
     "fmt"
-    "github.com/xberg-io/xberg/packages/go/v5/xberg"
+    "log"
+
+    "github.com/xberg-io/xberg/packages/go"
 )
 
 func main() {
-    ctx := context.Background()
-    result, err := xberg.ExtractFile(ctx, "document.pdf", nil)
+    input := xberg.ExtractInputFromURI("document.pdf")
+    result, err := xberg.Extract(*input, xberg.ExtractionConfig{})
     if err != nil {
-        panic(err)
+        log.Fatalf("extract failed: %v", err)
     }
-    fmt.Println(result.Content)
+    fmt.Println(result.Results[0].Content)
 }
 ```
 
-See the [Go binding documentation](https://github.com/xberg-io/xberg/tree/main/packages/go) for complete API reference.
+**With OCR** (config fields are pointers):
+
+```go
+ocrConfig := &xberg.OcrConfig{Backend: "tesseract", Language: "eng"}
+config := xberg.ExtractionConfig{Ocr: ocrConfig}
+
+input := xberg.ExtractInputFromURI("scanned.pdf")
+result, err := xberg.Extract(*input, config)
+```
+
+See the [Go binding documentation](https://github.com/xberg-io/xberg/tree/main/packages/go) for the complete API reference.
 
 ## Ruby
 
@@ -52,22 +65,37 @@ gem 'xberg'
 ```ruby
 require 'xberg'
 
-result = Xberg.extract_file_sync('document.pdf')
-puts result.content
+input = Xberg::ExtractInput.new(uri: 'document.pdf')
+config = Xberg::ExtractionConfig.new
+result = Xberg.extract(input, config)
+puts result.results.first.content
 ```
 
-See the [Ruby binding documentation](https://github.com/xberg-io/xberg/tree/main/packages/ruby) for complete API reference.
+**With OCR:**
+
+```ruby
+config = Xberg::ExtractionConfig.new(
+  ocr: Xberg::OcrConfig.new(
+    backend: 'tesseract',
+    language: 'eng+fra',
+    tesseract_config: Xberg::TesseractConfig.new(psm: 3)
+  )
+)
+result = Xberg.extract(Xberg::ExtractInput.new(uri: 'scanned.pdf'), config)
+puts result.results.first.content
+```
+
+See the [Ruby binding documentation](https://github.com/xberg-io/xberg/tree/main/packages/ruby) for the complete API reference.
 
 ## Java
 
-**Installation:**
-Add to your Maven `pom.xml`:
+**Installation:** add to your Maven `pom.xml` (the binding version tracks the core release, currently `1.0.0-rc.1`):
 
 ```xml
 <dependency>
     <groupId>io.xberg</groupId>
     <artifactId>xberg</artifactId>
-    <version>4.2.x</version>
+    <version>1.0.0-rc.1</version>
 </dependency>
 ```
 
@@ -75,17 +103,39 @@ Add to your Maven `pom.xml`:
 
 ```java
 import io.xberg.Xberg;
+import io.xberg.ExtractInput;
+import io.xberg.ExtractInputKind;
+import io.xberg.ExtractionConfig;
 import io.xberg.ExtractionResult;
+import io.xberg.ExtractedDocument;
 
 public class Example {
     public static void main(String[] args) throws Exception {
-        ExtractionResult result = Xberg.extractFile("document.pdf");
-        System.out.println(result.getContent());
+        ExtractionResult output = Xberg.extract(
+            ExtractInput.builder().withKind(ExtractInputKind.Uri).withUri("document.pdf").build(),
+            ExtractionConfig.builder().build()
+        );
+        ExtractedDocument result = output.results().get(0);
+        System.out.println(result.content());
     }
 }
 ```
 
-See the [Java binding documentation](https://github.com/xberg-io/xberg/tree/main/packages/java) for complete API reference.
+**With OCR:**
+
+```java
+import io.xberg.OcrConfig;
+
+ExtractionConfig config = ExtractionConfig.builder()
+    .ocr(OcrConfig.builder().backend("tesseract").language("eng").build())
+    .build();
+ExtractionResult output = Xberg.extract(
+    ExtractInput.builder().withKind(ExtractInputKind.Uri).withUri("scanned.pdf").build(),
+    config
+);
+```
+
+See the [Java binding documentation](https://github.com/xberg-io/xberg/tree/main/packages/java) for the complete API reference.
 
 ## C
 
@@ -95,61 +145,124 @@ See the [Java binding documentation](https://github.com/xberg-io/xberg/tree/main
 dotnet add package Xberg
 ```
 
-**Basic Extraction:**
+**Basic Extraction** (async):
 
 ```csharp
 using Xberg;
 
-var result = XbergClient.ExtractFileSync("document.pdf");
+var result = (await XbergConverter.ExtractAsync(
+    ExtractInput.FromUri("document.pdf"),
+    new ExtractionConfig())).Results[0];
 Console.WriteLine(result.Content);
 ```
 
-See the [C# binding documentation](https://github.com/xberg-io/xberg/tree/main/packages/csharp) for complete API reference.
+**With OCR:**
+
+```csharp
+using Xberg;
+
+var config = new ExtractionConfig
+{
+    Ocr = new OcrConfig { Backend = "tesseract", Language = "eng" }
+};
+
+var result = (await XbergConverter.ExtractAsync(
+    ExtractInput.FromUri("scanned.pdf"), config)).Results[0];
+Console.WriteLine(result.Content);
+```
+
+See the [C# binding documentation](https://github.com/xberg-io/xberg/tree/main/packages/csharp) for the complete API reference.
 
 ## PHP
 
 **Installation:**
 
 ```bash
-composer require xberg/xberg
+composer require xberg-io/xberg
 ```
 
 **Basic Extraction:**
 
 ```php
 <?php
+declare(strict_types=1);
+
 require 'vendor/autoload.php';
 
-use Xberg\Xberg;
+use Xberg\XbergApi;
+use Xberg\ExtractionConfig;
+use Xberg\ExtractInput;
 
-$xberg = new Xberg();
-$result = $xberg->extractFile('document.pdf');
+$output = XbergApi::extract(ExtractInput::fromUri('document.pdf'), ExtractionConfig::default());
+$result = $output->results[0];
 echo $result->content;
 ```
 
-See the [PHP binding documentation](https://github.com/xberg-io/xberg/tree/main/packages/php) for complete API reference.
+**From bytes:**
+
+```php
+$output = XbergApi::extract(ExtractInput::fromBytes($fileData, $mimeType), ExtractionConfig::default());
+$result = $output->results[0];
+```
+
+**With OCR:**
+
+```php
+use Xberg\OcrConfig;
+
+$ocrConfig = new OcrConfig();
+$ocrConfig->setBackend('tesseract');
+$ocrConfig->setLanguage('eng');
+
+$config = ExtractionConfig::default();
+$config->setForceOcr(true);
+$config->setOcr($ocrConfig);
+
+$output = XbergApi::extract(ExtractInput::fromUri('scanned.pdf'), $config);
+$result = $output->results[0];
+echo $result->content;
+```
+
+See the [PHP binding documentation](https://github.com/xberg-io/xberg/tree/main/packages/php) for the complete API reference.
 
 ## Elixir
 
-**Installation:**
-Add to your `mix.exs` dependencies:
+**Installation:** add to your `mix.exs` dependencies (the binding version tracks the core release, currently `1.0.0-rc.1`):
 
 ```elixir
 def deps do
   [
-    xberg: "~> 4.2"
+    {:xberg, "~> 1.0.0-rc.1"}
   ]
 end
 ```
 
-**Basic Extraction:**
+**Basic Extraction** (returns `{:ok, output}` / `{:error, reason}`):
 
 ```elixir
-{:ok, result} = Xberg.extract_file("document.pdf")
+case Xberg.extract(input: %Xberg.ExtractInput{kind: :uri, uri: "document.pdf"}, config: nil) do
+  {:ok, output} ->
+    result = List.first(output.results)
+    IO.puts(result.content)
+
+  {:error, reason} ->
+    IO.puts("Error: #{reason}")
+end
+```
+
+**With OCR** (config may be a struct or a JSON string):
+
+```elixir
+config = ~s({"ocr": {"backend": "tesseract", "language": "eng"}})
+
+{:ok, output} =
+  Xberg.extract(input: %Xberg.ExtractInput{kind: :uri, uri: "scanned.pdf"}, config: config)
+
+result = List.first(output.results)
 IO.puts(result.content)
 ```
 
-See the [Elixir binding documentation](https://github.com/xberg-io/xberg/tree/main/packages/elixir) for complete API reference.
+See the [Elixir binding documentation](https://github.com/xberg-io/xberg/tree/main/packages/elixir) for the complete API reference.
 
 ## WebAssembly (WASM)
 
@@ -159,24 +272,35 @@ See the [Elixir binding documentation](https://github.com/xberg-io/xberg/tree/ma
 npm install @xberg-io/xberg-wasm
 ```
 
-**Basic Extraction:**
+**Basic Extraction:** the WASM build is bytes-based and must be initialized once with `initWasm()`. Unlike the native bindings, it returns the extracted document **directly** (no `results` array).
 
 ```typescript
-import { extractBytes } from "@xberg-io/xberg-wasm";
+import { initWasm, extract } from "@xberg-io/xberg-wasm";
 
-const fileData = await fs.promises.readFile("document.pdf");
-const result = await extractBytes(fileData, "application/pdf");
+await initWasm();
+
+const response = await fetch("document.pdf");
+const data = new Uint8Array(await response.arrayBuffer());
+
+const result = await extract({ kind: "bytes", bytes: data, mimeType: "application/pdf" }, undefined);
+console.log(result.content);
+```
+
+**With OCR:**
+
+```typescript
+const config = { force_ocr: true, ocr: { backend: "tesseract", language: "eng" } };
+const result = await extract({ kind: "bytes", bytes: data, mimeType: "application/pdf" }, config);
 console.log(result.content);
 ```
 
 Supports browsers, Deno, and Cloudflare Workers.
 
-See the [WASM binding documentation](https://github.com/xberg-io/xberg/tree/main/packages/typescript) for complete API reference.
+See the [WASM binding documentation](https://github.com/xberg-io/xberg/tree/main/packages/typescript) for the complete API reference.
 
 ## Docker
 
-**Installation:**
-Pull the official image from GitHub Container Registry:
+**Installation:** pull the official image from GitHub Container Registry:
 
 ```bash
 docker pull ghcr.io/xberg-io/xberg
@@ -200,13 +324,12 @@ docker run -v $(pwd):/data ghcr.io/xberg-io/xberg extract /data/document.pdf
 docker run -i ghcr.io/xberg-io/xberg mcp
 ```
 
-Image sizes:
-
-- Core image: 1.0-1.3GB
-- Full image: ~1.0-1.3GB
-
 See the [Docker guide](https://docs.xberg.io/guides/docker/) for deployment details.
+
+## Other Bindings
+
+Native bindings also ship for R, Dart/Flutter, Swift, Kotlin (Android), Zig, and C (FFI). They follow the same `ExtractInput` → `extract` → `results[0]` shape (R, Swift, Zig, and C use JSON-string config and, for some, JSON-string results). See the per-language package directories under [`packages/`](https://github.com/xberg-io/xberg/tree/main/packages) for details.
 
 ## Platform Support
 
-All language bindings include precompiled binaries for x86_64 and aarch64 on Linux and macOS. Windows support varies by binding. Refer to the main [README](https://github.com/xberg-io/xberg) for platform compatibility matrix.
+All language bindings include precompiled binaries for x86_64 and aarch64 on Linux and macOS. Windows support varies by binding. Refer to the main [README](https://github.com/xberg-io/xberg) for the platform compatibility matrix.

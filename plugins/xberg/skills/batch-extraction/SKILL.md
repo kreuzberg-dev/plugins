@@ -120,26 +120,24 @@ xberg batch corpus/*.pdf --config xberg.toml
 
 ## Programmatic access
 
-From Python, use the batch helpers (async and sync):
+From Python, `extract_batch` takes a list of `ExtractInput`s and returns one
+envelope whose `results` array holds a document per input:
 
 ```python
-from xberg import batch_extract_files, batch_extract_files_sync, ExtractionConfig
+from xberg import ExtractInput, extract_batch, ExtractionConfig
 
 config = ExtractionConfig(output_format="markdown")
 
-# Async
-results = await batch_extract_files(["a.pdf", "b.docx", "c.xlsx"], config=config)
+inputs = [ExtractInput.from_uri(p) for p in ["a.pdf", "b.docx", "c.xlsx"]]
+output = await extract_batch(inputs, config)
 
-# Sync
-results = batch_extract_files_sync(["a.pdf", "b.docx"], config=config)
-
-for result in results:
-    print(len(result.content))
+for doc in output.results:
+    print(len(doc.content))
 ```
 
-Node.js mirrors this with `batchExtractFiles`; Rust uses
-`batch_extract_file` (requires the `tokio-runtime` feature). See
-`references/python-api.md`, `references/nodejs-api.md`, and
+Per-input overrides go on `ExtractInput.config` (a `FileExtractionConfig`).
+Node.js mirrors this with `extractBatch`; Rust uses `extract_batch(inputs, &config)`.
+See `references/python-api.md`, `references/nodejs-api.md`, and
 `references/rust-api.md` in the sibling `xberg` skill.
 
 ## MCP

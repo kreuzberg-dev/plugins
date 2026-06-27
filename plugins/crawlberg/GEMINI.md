@@ -14,8 +14,18 @@ MCP server.
   without rendering content.
 - `crawlberg interact <url> --actions <json>` — drive a real browser to
   click, type, scroll, and capture the resulting DOM.
+- `crawlberg batch-scrape <url...>` / `crawlberg batch-crawl <url...>` —
+  scrape or crawl many URLs concurrently.
+- `crawlberg download <url>` — download a document and report its file
+  metadata.
+- `crawlberg citations <input>` — rewrite markdown links as numbered
+  citations (`<input>` is markdown text or `@file.md`).
+- `crawlberg version` — print the crawlberg version as JSON.
 - `crawlberg mcp` — the MCP server (stdio transport) is auto-registered for
-  Gemini CLI when this extension is installed.
+  Gemini CLI when this extension is installed. It exposes nine tools: `scrape`,
+  `crawl`, `map`, `batch_scrape`, `batch_crawl`, `download`, `interact`,
+  `generate_citations`, and `get_version`.
+- `crawlberg serve` — Firecrawl-v1-compatible REST API server (`api` feature).
 
 ## Prerequisite
 

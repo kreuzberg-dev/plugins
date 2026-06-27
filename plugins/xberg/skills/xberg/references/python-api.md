@@ -1,1440 +1,657 @@
 # Xberg Python API Reference
 
-Comprehensive documentation for the Xberg Python API. All extraction logic and heavy lifting is implemented in high-performance Rust, with Python adding OCR backends (EasyOCR, PaddleOCR) and custom post-processor support.
+Comprehensive documentation for the Xberg Python API. All extraction logic and heavy lifting is implemented in a high-performance Rust core; Python adds custom plugin support (post-processors, validators, OCR/embedding backends).
+
+Install with `pip install xberg`.
+
+The Python API is **async-only**. There are exactly two entry points — `extract` and `extract_batch` — and both are coroutines that must be awaited. There are no `extract_file` / `extract_bytes` / `extract_file_sync` / `batch_extract_files` functions.
 
 ## Extraction Functions
 
-### Synchronous File Extraction
+### `extract` (async)
 
 ```python
-def extract_file_sync(
-    file_path: str | Path,
-    mime_type: str | None = None,
+async def extract(
+    input: ExtractInput | None = None,
     config: ExtractionConfig | None = None,
-    *,
-    easyocr_kwargs: dict[str, Any] | None = None,
-    paddleocr_kwargs: dict[str, Any] | None = None,
 ) -> ExtractionResult
 ```
 
-Extract content from a file (synchronous).
+Extract content from a single input (a local path, `file://` URI, HTTP(S) URL, or raw bytes). Returns an `ExtractionResult` **envelope** — the extracted document(s) live in `result.results`.
 
 **Parameters:**
 
-- `file_path` (str | Path): Path to the file
-- `mime_type` (str | None): Optional MIME type hint (auto-detected if None)
-- `config` (ExtractionConfig | None): Extraction configuration (uses defaults if None)
-- `easyocr_kwargs` (dict | None): EasyOCR initialization options (languages, use_gpu, beam_width, etc.)
-- `paddleocr_kwargs` (dict | None): PaddleOCR initialization options (lang, use_angle_cls, show_log, etc.)
+- `input` (ExtractInput | None): The input to extract. Construct with `ExtractInput.from_uri(...)` or `ExtractInput(kind="bytes", ...)`.
+- `config` (ExtractionConfig | None): Extraction configuration (uses defaults if None).
 
-**Returns:** ExtractionResult with content, metadata, and tables
+**Returns:** `ExtractionResult` with `results`, `errors`, and `summary`.
 
 **Example:**
 
 ```python
-from xberg import extract_file_sync, ExtractionConfig, OcrConfig, TesseractConfig
+import asyncio
+from xberg import ExtractInput, extract, ExtractionConfig
 
-# Basic usage
-result = extract_file_sync("document.pdf")
+async def main() -> None:
+    result = await extract(ExtractInput.from_uri("document.pdf"), ExtractionConfig())
+    doc = result.results[0]
+    print(doc.content)
+    print(doc.metadata)
+    print(doc.tables)
 
-# With Tesseract configuration
-config = ExtractionConfig(
-    ocr=OcrConfig(
-        backend="tesseract",
-        language="eng",
-        tesseract_config=TesseractConfig(psm=6, enable_table_detection=True),
-    )
-)
-result = extract_file_sync("invoice.pdf", config=config)
-
-# With EasyOCR custom options
-config = ExtractionConfig(ocr=OcrConfig(backend="easyocr", language="eng"))
-result = extract_file_sync("scanned.pdf", config=config, easyocr_kwargs={"use_gpu": True})
+asyncio.run(main())
 ```
 
-### Asynchronous File Extraction
+### `extract_batch` (async)
 
 ```python
-async def extract_file(
-    file_path: str | Path,
-    mime_type: str | None = None,
+async def extract_batch(
+    inputs: list[ExtractInput],
     config: ExtractionConfig | None = None,
-    *,
-    easyocr_kwargs: dict[str, Any] | None = None,
-    paddleocr_kwargs: dict[str, Any] | None = None,
 ) -> ExtractionResult
 ```
 
-Extract content from a file (asynchronous). Same parameters and behavior as `extract_file_sync`.
+Extract content from multiple inputs in parallel. Returns a single `ExtractionResult` envelope whose `results` list contains one `ExtractedDocument` per input (in input order), plus any per-input `errors`.
 
-### Synchronous Bytes Extraction
-
-```python
-def extract_bytes_sync(
-    data: bytes | bytearray,
-    mime_type: str,
-    config: ExtractionConfig | None = None,
-    *,
-    easyocr_kwargs: dict[str, Any] | None = None,
-    paddleocr_kwargs: dict[str, Any] | None = None,
-) -> ExtractionResult
-```
-
-Extract content from bytes (synchronous).
-
-**Parameters:**
-
-- `data` (bytes | bytearray): File content as bytes or bytearray
-- `mime_type` (str): MIME type of the data (required for format detection)
-- `config` (ExtractionConfig | None): Extraction configuration
-- `easyocr_kwargs` (dict | None): EasyOCR initialization options
-- `paddleocr_kwargs` (dict | None): PaddleOCR initialization options
-
-**Returns:** ExtractionResult with content, metadata, and tables
-
-### Asynchronous Bytes Extraction
+**Example:**
 
 ```python
-async def extract_bytes(
-    data: bytes | bytearray,
-    mime_type: str,
-    config: ExtractionConfig | None = None,
-    *,
-    easyocr_kwargs: dict[str, Any] | None = None,
-    paddleocr_kwargs: dict[str, Any] | None = None,
-) -> ExtractionResult
+import asyncio
+from xberg import ExtractInput, extract_batch
+
+async def main() -> None:
+    inputs = [
+        ExtractInput(kind="uri", uri="document.pdf"),
+        ExtractInput(
+            kind="bytes",
+            bytes=b"Hello from memory",
+            mime_type="text/plain",
+            filename="note.txt",
+        ),
+    ]
+    output = await extract_batch(inputs)
+    for doc in output.results:
+        print(doc.content[:200])
+    print(f"Inputs: {output.summary.inputs}, results: {output.summary.results}, errors: {output.summary.errors}")
+
+asyncio.run(main())
 ```
 
-Extract content from bytes (asynchronous). Same parameters and behavior as `extract_bytes_sync`.
+## Input Construction
 
-### Batch File Extraction
+### ExtractInput
+
+Unified input for both entry points.
+
+**Fields:**
+
+| Field       | Type                     | Description                                                       |
+| ----------- | ------------------------ | ---------------------------------------------------------------- |
+| `kind`      | `"uri"` \| `"bytes"`     | Source kind. `"uri"` requires `uri`; `"bytes"` requires `bytes`. |
+| `uri`       | str \| None              | Local path, `file://` URI, or HTTP(S) URL (for `kind="uri"`).    |
+| `bytes`     | bytes \| None            | Raw bytes (for `kind="bytes"`).                                  |
+| `mime_type` | str \| None              | Optional MIME type hint.                                         |
+| `filename`  | str \| None              | Filename hint used for MIME detection and metadata.             |
+| `config`    | FileExtractionConfig \| None | Per-input extraction overrides.                              |
+
+**Construction:**
 
 ```python
-async def batch_extract_files(
-    paths: list[str | Path],
-    config: ExtractionConfig | None = None,
-    *,
-    easyocr_kwargs: dict[str, Any] | None = None,
-    paddleocr_kwargs: dict[str, Any] | None = None,
-) -> list[ExtractionResult]
+from xberg import ExtractInput
+
+# From a path, file:// URI, or URL
+ExtractInput.from_uri("document.pdf")
+ExtractInput.from_uri("https://example.com/report.pdf")
+
+# From raw bytes (mime_type or filename helps detection)
+ExtractInput(kind="bytes", bytes=b"%PDF-1.4 ...", mime_type="application/pdf", filename="document.pdf")
 ```
-
-Extract content from multiple files in parallel (asynchronous).
-
-**Parameters:**
-
-- `paths` (list[str | Path]): List of file paths
-- `config` (ExtractionConfig | None): Extraction configuration
-- `easyocr_kwargs` (dict | None): EasyOCR initialization options
-- `paddleocr_kwargs` (dict | None): PaddleOCR initialization options
-
-**Returns:** List of ExtractionResults (one per file)
-
-### Batch File Extraction (Synchronous)
-
-```python
-def batch_extract_files_sync(
-    paths: list[str | Path],
-    config: ExtractionConfig | None = None,
-    *,
-    easyocr_kwargs: dict[str, Any] | None = None,
-    paddleocr_kwargs: dict[str, Any] | None = None,
-) -> list[ExtractionResult]
-```
-
-Extract content from multiple files in parallel (synchronous).
-
-### Batch Bytes Extraction
-
-```python
-async def batch_extract_bytes(
-    data_list: list[bytes | bytearray],
-    mime_types: list[str],
-    config: ExtractionConfig | None = None,
-    *,
-    easyocr_kwargs: dict[str, Any] | None = None,
-    paddleocr_kwargs: dict[str, Any] | None = None,
-) -> list[ExtractionResult]
-```
-
-Extract content from multiple byte arrays in parallel (asynchronous).
-
-**Parameters:**
-
-- `data_list` (list[bytes | bytearray]): List of file contents as bytes/bytearray
-- `mime_types` (list[str]): List of MIME types (one per data item)
-- `config` (ExtractionConfig | None): Extraction configuration
-- `easyocr_kwargs` (dict | None): EasyOCR initialization options
-- `paddleocr_kwargs` (dict | None): PaddleOCR initialization options
-
-**Returns:** List of ExtractionResults (one per data item)
-
-### Batch Bytes Extraction (Synchronous)
-
-```python
-def batch_extract_bytes_sync(
-    data_list: list[bytes | bytearray],
-    mime_types: list[str],
-    config: ExtractionConfig | None = None,
-    *,
-    easyocr_kwargs: dict[str, Any] | None = None,
-    paddleocr_kwargs: dict[str, Any] | None = None,
-) -> list[ExtractionResult]
-```
-
-Extract content from multiple byte arrays in parallel (synchronous).
-
-### Per-File Config in Batch Functions
-
-As of v4.5.0, per-file configuration overrides are passed as an optional `file_configs` parameter on the unified batch functions:
-
-```python
-def batch_extract_files_sync(
-    paths: list[str | Path],
-    config: ExtractionConfig | None = None,
-    *,
-    file_configs: list[FileExtractionConfig | None] | None = None,
-    easyocr_kwargs: dict[str, Any] | None = None,
-) -> list[ExtractionResult]
-```
-
-The `file_configs` list must have the same length as `paths`. Each element is either a `FileExtractionConfig` override or `None` to use batch defaults. The same parameter is available on `batch_extract_files`, `batch_extract_bytes_sync`, and `batch_extract_bytes`.
-
-> **Note:** The separate `batch_extract_files_with_configs_sync` / `batch_extract_files_with_configs` / `batch_extract_bytes_with_configs_sync` / `batch_extract_bytes_with_configs` functions have been removed in v4.5.0.
 
 ## Configuration Classes
 
 ### ExtractionConfig
 
-Main extraction configuration for document processing. All attributes are optional and use sensible defaults when not specified.
+Main extraction configuration. All fields are optional and use sensible defaults when omitted. Construct with keyword arguments.
 
-**Attributes:**
+**Common fields:**
 
-| Field                        | Type                            | Default       | Description                                                                               |
-| ---------------------------- | ------------------------------- | ------------- | ----------------------------------------------------------------------------------------- |
-| `use_cache`                  | bool                            | True          | Enable caching of extraction results to improve performance on repeated extractions       |
-| `enable_quality_processing`  | bool                            | True          | Enable quality post-processing to clean and normalize extracted text                      |
-| `ocr`                        | OcrConfig \| None               | None          | OCR configuration for extracting text from images. None = OCR disabled                    |
-| `force_ocr`                  | bool                            | False         | Force OCR processing even for searchable PDFs that contain extractable text               |
-| `chunking`                   | ChunkingConfig \| None          | None          | Text chunking configuration for dividing content into manageable chunks. None = disabled  |
-| `images`                     | ImageExtractionConfig \| None   | None          | Image extraction configuration for extracting images FROM documents. None = no extraction |
-| `pdf_options`                | PdfConfig \| None               | None          | PDF-specific options like password handling and metadata extraction                       |
-| `token_reduction`            | TokenReductionConfig \| None    | None          | Token reduction configuration for reducing token count in extracted content               |
-| `language_detection`         | LanguageDetectionConfig \| None | None          | Language detection configuration for identifying document language(s)                     |
-| `keywords`                   | KeywordConfig \| None           | None          | Keyword extraction configuration for identifying important terms and phrases              |
-| `postprocessor`              | PostProcessorConfig \| None     | None          | Post-processor configuration for custom text processing                                   |
-| `max_concurrent_extractions` | int \| None                     | num_cpus \* 2 | Maximum concurrent extractions in batch operations                                        |
-| `html_options`               | HtmlConversionOptions \| None   | None          | HTML conversion options for converting documents to markdown                              |
-| `pages`                      | PageConfig \| None              | None          | Page extraction configuration for tracking page boundaries                                |
-| `security_limits`            | dict[str, int] \| None          | None          | Security limits configuration                                                             |
-| `result_format`              | str                             | "unified"     | Result format: "unified" or "element_based"                                               |
-| `output_format`              | str                             | "plain"       | Output content format: "plain", "markdown", "djot", or "html"                             |
+| Field                       | Type                              | Default     | Description                                                          |
+| --------------------------- | --------------------------------- | ----------- | ------------------------------------------------------------------- |
+| `use_cache`                 | bool                              | True        | Cache extraction results to speed up repeated extractions.          |
+| `enable_quality_processing` | bool                              | True        | Quality post-processing to clean and normalize extracted text.      |
+| `ocr`                       | OcrConfig \| None                 | None        | OCR configuration. None = OCR disabled.                             |
+| `force_ocr`                 | bool                              | False       | Force OCR even for searchable PDFs that contain extractable text.   |
+| `chunking`                  | ChunkingConfig \| None            | None        | Text chunking configuration. None = disabled.                      |
+| `images`                    | ImageExtractionConfig \| None     | None        | Extract images FROM documents. None = no image extraction.         |
+| `pdf_options`               | PdfConfig \| None                 | None        | PDF-specific options.                                              |
+| `token_reduction`           | TokenReductionOptions \| None     | None        | Reduce token count in extracted content. None = no reduction.       |
+| `language_detection`        | LanguageDetectionConfig \| None   | None        | Detect document language(s).                                       |
+| `keywords`                  | KeywordConfig \| None             | None        | Keyword extraction.                                                |
+| `pages`                     | PageConfig \| None                | None        | Per-page content extraction and tracking.                          |
+| `postprocessor`             | PostProcessorConfig \| None       | None        | Post-processor pipeline configuration.                            |
+| `html_output`               | HtmlOutputConfig \| None          | None        | Styled HTML output configuration (when `output_format="html"`).    |
+| `max_concurrent_extractions`| int \| None                       | num_cpus×1.5| Maximum concurrent extractions in batch operations.               |
+| `result_format`             | `"unified"` \| `"element_based"`  | "unified"   | Result structure format.                                          |
+| `output_format`             | `"plain"` \| `"markdown"` \| `"djot"` \| `"html"` | "plain" | Content text format.                          |
+| `security_limits`           | SecurityLimits \| None            | None        | Security limits for archive extraction.                            |
 
 **Example:**
 
 ```python
-from xberg import ExtractionConfig, ChunkingConfig, OcrConfig
+from xberg import ExtractInput, extract, ExtractionConfig, OcrConfig, ChunkingConfig
 
-# Basic extraction with defaults
-config = ExtractionConfig()
-
-# Enable chunking with 512-char chunks and 100-char overlap
-config = ExtractionConfig(chunking=ChunkingConfig(max_chars=512, max_overlap=100))
-
-# Enable OCR with Tesseract
-config = ExtractionConfig(ocr=OcrConfig(backend="tesseract", language="eng"))
-
-# Multiple options
 config = ExtractionConfig(
     use_cache=True,
     enable_quality_processing=True,
     output_format="markdown",
-    result_format="unified"
+    ocr=OcrConfig(backend="tesseract", language="eng"),
+    chunking=ChunkingConfig(max_characters=1000, overlap=200),
 )
+result = await extract(ExtractInput.from_uri("document.pdf"), config)
 ```
 
 ### FileExtractionConfig
 
-Per-file extraction overrides for batch operations. All fields optional (`None` = use batch default).
-
-**Key fields:** `enable_quality_processing`, `ocr`, `force_ocr`, `chunking`, `images`, `pdf_options`, `token_reduction`, `language_detection`, `pages`, `keywords`, `postprocessor`, `html_options`, `result_format`, `output_format`, `include_document_structure`, `layout`.
-
-Excluded (batch-level only): `max_concurrent_extractions`, `use_cache`, `acceleration`, `security_limits`.
+Per-input extraction overrides, set on `ExtractInput.config`. All fields are `Optional` — `None` means "use the batch/default config value". Mirrors `ExtractionConfig` minus batch-level concerns (`max_concurrent_extractions`, `use_cache`, `acceleration`, `security_limits`).
 
 ```python
-per_file = FileExtractionConfig(
-    force_ocr=True,
-    ocr=OcrConfig(backend="tesseract", language="deu"),
+from xberg import ExtractInput, FileExtractionConfig, OcrConfig
+
+scanned = ExtractInput(
+    kind="uri",
+    uri="scanned.pdf",
+    config=FileExtractionConfig(
+        force_ocr=True,
+        ocr=OcrConfig(backend="tesseract", language="deu"),
+    ),
 )
 ```
 
 ### OcrConfig
 
-OCR configuration for extracting text from images.
+OCR configuration for extracting text from images and scanned pages.
 
-**Attributes:**
-
-| Field              | Type                    | Default     | Description                                                                                           |
-| ------------------ | ----------------------- | ----------- | ----------------------------------------------------------------------------------------------------- |
-| `backend`          | str                     | "tesseract" | OCR backend: "tesseract", "easyocr", or "paddleocr"                                                   |
-| `language`         | str                     | "eng"       | Language code (ISO 639-3 three-letter: "eng", "deu", "fra" or ISO 639-1 two-letter: "en", "de", "fr") |
-| `tesseract_config` | TesseractConfig \| None | None        | Tesseract-specific configuration (only used when backend="tesseract")                                 |
-
-**Example:**
+| Field              | Type                    | Default     | Description                                                                                  |
+| ------------------ | ----------------------- | ----------- | ------------------------------------------------------------------------------------------- |
+| `enabled`          | bool                    | True        | Whether OCR is enabled.                                                                      |
+| `backend`          | str                     | `""`        | OCR backend: `"tesseract"`, `"paddleocr"`, `"paddle-ocr"`, or `"vlm"`.                       |
+| `language`         | str \| list[str]        | `["eng"]`   | Language code(s). Accepts a single code (`"eng"`), a `+`-joined string (`"eng+fra"`), or a list (`["eng", "deu"]`). |
+| `tesseract_config` | TesseractConfig \| None | None        | Tesseract-specific configuration.                                                            |
 
 ```python
-from xberg import OcrConfig
+from xberg import OcrConfig, TesseractConfig
 
-# Tesseract with German language
-config = OcrConfig(backend="tesseract", language="deu")
-
-# EasyOCR for faster recognition
-config = OcrConfig(backend="easyocr", language="eng")
-
-# PaddleOCR for production deployments
-config = OcrConfig(backend="paddleocr", language="chi_sim")
+OcrConfig(backend="tesseract", language="deu")
+OcrConfig(backend="tesseract", language=["eng", "fra"], tesseract_config=TesseractConfig(psm=6))
+OcrConfig(backend="paddleocr", language="chinese")
 ```
 
 ### TesseractConfig
 
-Detailed Tesseract OCR configuration for advanced tuning. Fine-tune Tesseract OCR behavior for specific document types and quality levels.
+Detailed Tesseract OCR tuning. Common fields:
 
-**Attributes:**
-
-| Field                                | Type                             | Default    | Description                                                                               |
-| ------------------------------------ | -------------------------------- | ---------- | ----------------------------------------------------------------------------------------- |
-| `language`                           | str                              | "eng"      | OCR language (ISO 639-3 three-letter code)                                                |
-| `psm`                                | int                              | 3          | Page Segmentation Mode: 0 (detection only), 3 (auto), 6 (uniform block), 11 (sparse text) |
-| `output_format`                      | str                              | "markdown" | Output format for OCR results                                                             |
-| `oem`                                | int                              | 3          | OCR Engine Mode: 0 (legacy), 1 (LSTM), 2 (both), 3 (auto)                                 |
-| `min_confidence`                     | float                            | 0.0        | Minimum confidence threshold (0.0-1.0) for accepting OCR results                          |
-| `preprocessing`                      | ImagePreprocessingConfig \| None | None       | Image preprocessing configuration before OCR                                              |
-| `enable_table_detection`             | bool                             | True       | Enable automatic table detection and extraction                                           |
-| `table_min_confidence`               | float                            | 0.0        | Minimum confidence for table detection (0.0-1.0)                                          |
-| `table_column_threshold`             | int                              | 50         | Minimum pixel width between columns                                                       |
-| `table_row_threshold_ratio`          | float                            | 0.5        | Minimum row height ratio                                                                  |
-| `use_cache`                          | bool                             | True       | Cache OCR results for improved performance                                                |
-| `classify_use_pre_adapted_templates` | bool                             | True       | Use pre-adapted character templates                                                       |
-| `language_model_ngram_on`            | bool                             | False      | Enable language model n-gram processing                                                   |
-| `tessedit_dont_blkrej_good_wds`      | bool                             | True       | Don't block-reject good words                                                             |
-| `tessedit_dont_rowrej_good_wds`      | bool                             | True       | Don't row-reject good words                                                               |
-| `tessedit_enable_dict_correction`    | bool                             | True       | Enable dictionary-based spelling correction                                               |
-| `tessedit_char_whitelist`            | str                              | ""         | Whitelist of characters to recognize (empty = all)                                        |
-| `tessedit_char_blacklist`            | str                              | ""         | Blacklist of characters to ignore                                                         |
-| `tessedit_use_primary_params_model`  | bool                             | True       | Use primary parameters model                                                              |
-| `textord_space_size_is_variable`     | bool                             | True       | Allow variable space sizes                                                                |
-| `thresholding_method`                | bool                             | False      | Thresholding method for binarization                                                      |
-
-**Example:**
+| Field                    | Type                             | Default | Description                                                                                |
+| ------------------------ | -------------------------------- | ------- | ----------------------------------------------------------------------------------------- |
+| `psm`                    | int                              | 3       | Page Segmentation Mode: 0 (detection only), 3 (auto), 6 (uniform block), 11 (sparse text). |
+| `oem`                    | int                              | 3       | OCR Engine Mode: 0 (legacy), 1 (LSTM), 2 (both), 3 (auto).                                 |
+| `min_confidence`         | float                            | 0.0     | Minimum confidence threshold (0.0–1.0).                                                    |
+| `preprocessing`          | ImagePreprocessingConfig \| None | None    | Image preprocessing before OCR.                                                            |
+| `enable_table_detection` | bool                             | True    | Detect and extract tables from OCR output.                                                 |
+| `tessedit_char_whitelist`| str                              | `""`    | Whitelist of characters to recognize (empty = all).                                        |
 
 ```python
 from xberg import TesseractConfig, ImagePreprocessingConfig
 
-# General document OCR
-config = TesseractConfig(psm=3, oem=3)
-
-# Invoice/form OCR with table detection
-config = TesseractConfig(psm=6, oem=2, enable_table_detection=True, min_confidence=0.6)
-
-# High-precision technical document OCR
-config = TesseractConfig(
-    psm=3,
-    oem=2,
-    preprocessing=ImagePreprocessingConfig(denoise=True, contrast_enhance=True, auto_rotate=True),
-    min_confidence=0.7,
-    tessedit_enable_dict_correction=True,
-)
-
-# Numeric-only OCR (for receipts, barcodes)
-config = TesseractConfig(psm=6, tessedit_char_whitelist="0123456789.-,", min_confidence=0.8)
-
-# Multiple language document
-config = TesseractConfig(language="eng+fra+deu", psm=3, oem=2)
+TesseractConfig(psm=6, oem=1, min_confidence=0.8, enable_table_detection=True)
+TesseractConfig(preprocessing=ImagePreprocessingConfig(target_dpi=300, denoise=True))
 ```
 
 ### ChunkingConfig
 
-Text chunking configuration for dividing content into chunks. Chunking is useful for preparing content for embedding, indexing, or processing with length-limited systems (like LLM context windows).
+Text chunking for RAG, indexing, and length-limited systems.
 
-**Attributes:**
+| Field                     | Type                      | Default   | Description                                                                  |
+| ------------------------- | ------------------------- | --------- | -------------------------------------------------------------------------- |
+| `max_characters`          | int                       | 1000      | Maximum size per chunk (in units determined by `sizing`).                  |
+| `overlap`                 | int                       | 200       | Overlap between consecutive chunks.                                         |
+| `trim`                    | bool                      | True      | Trim whitespace from chunk boundaries.                                      |
+| `chunker_type`            | `"text"` \| `"markdown"` \| `"semantic"` | "text" | Chunking strategy.                                          |
+| `embedding`               | EmbeddingConfig \| None   | None      | Generate an embedding per chunk. None = no embeddings.                      |
+| `preset`                  | str \| None               | None      | Named preset (overrides individual settings if provided).                  |
+| `prepend_heading_context` | bool                      | False     | (Markdown chunker) prepend the heading breadcrumb to each chunk's content. |
 
-| Field         | Type                    | Default | Description                                                                                                                            |
-| ------------- | ----------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `max_chars`   | int                     | 1000    | Maximum number of characters per chunk. Chunks larger than this will be split intelligently at sentence/paragraph boundaries           |
-| `max_overlap` | int                     | 200     | Overlap between consecutive chunks in characters. Creates context bridges between chunks for smoother processing                       |
-| `embedding`   | EmbeddingConfig \| None | None    | Configuration for generating embeddings for each chunk using ONNX models. None = no embeddings                                         |
-| `preset`      | str \| None             | None    | Use a preset chunking configuration (overrides individual settings if provided). Use list_embedding_presets() to see available presets |
-
-**IMPORTANT:** The fields are `max_chars` and `max_overlap` (NOT `max_characters` or `overlap`).
-
-**Example:**
+> **IMPORTANT:** The fields are `max_characters` and `overlap` (NOT `max_chars`/`max_overlap` or `max_chars`/`max_chars`).
 
 ```python
 from xberg import ExtractionConfig, ChunkingConfig, EmbeddingConfig, EmbeddingModelType
 
-# Basic chunking with defaults
-config = ExtractionConfig(chunking=ChunkingConfig())
+# Defaults (1000 / 200)
+ExtractionConfig(chunking=ChunkingConfig())
 
-# Custom chunk size with overlap
-config = ExtractionConfig(chunking=ChunkingConfig(max_chars=512, max_overlap=100))
+# Custom size and overlap
+ExtractionConfig(chunking=ChunkingConfig(max_characters=512, overlap=100))
 
-# Chunking with embeddings
-config = ExtractionConfig(
+# Markdown chunker with embeddings
+ExtractionConfig(
     chunking=ChunkingConfig(
-        max_chars=512,
-        embedding=EmbeddingConfig(model=EmbeddingModelType.preset("balanced"))
+        chunker_type="markdown",
+        max_characters=512,
+        overlap=50,
+        embedding=EmbeddingConfig(model=EmbeddingModelType.preset("balanced")),
     )
-)
-
-# Using preset configuration
-config = ExtractionConfig(chunking=ChunkingConfig(preset="semantic"))
-```
-
-### PdfConfig
-
-PDF-specific extraction configuration.
-
-**Attributes:**
-
-| Field              | Type                    | Default | Description                                                                                         |
-| ------------------ | ----------------------- | ------- | --------------------------------------------------------------------------------------------------- |
-| `extract_images`   | bool                    | False   | Extract images from PDF documents                                                                   |
-| `passwords`        | list[str] \| None       | None    | List of passwords to try when opening encrypted PDFs. Try each password in order until one succeeds |
-| `extract_metadata` | bool                    | True    | Extract PDF metadata (title, author, creation date, etc.)                                           |
-| `hierarchy`        | HierarchyConfig \| None | None    | Document hierarchy detection configuration. None = no hierarchy detection                           |
-
-**Example:**
-
-```python
-from xberg import ExtractionConfig, PdfConfig, HierarchyConfig
-
-# Basic PDF configuration
-config = ExtractionConfig(pdf_options=PdfConfig())
-
-# Extract metadata and images from PDF
-config = ExtractionConfig(pdf_options=PdfConfig(extract_images=True, extract_metadata=True))
-
-# Handle encrypted PDFs
-config = ExtractionConfig(pdf_options=PdfConfig(passwords=["password123", "fallback_password"]))
-
-# Enable hierarchy detection
-config = ExtractionConfig(pdf_options=PdfConfig(hierarchy=HierarchyConfig(k_clusters=6)))
-```
-
-### ImageExtractionConfig
-
-Configuration for extracting images FROM documents. This is NOT for preprocessing images before OCR.
-
-**Attributes:**
-
-| Field                 | Type | Default | Description                                                                          |
-| --------------------- | ---- | ------- | ------------------------------------------------------------------------------------ |
-| `extract_images`      | bool | True    | Enable image extraction from documents                                               |
-| `target_dpi`          | int  | 300     | Target DPI for image normalization. Images are resampled to this DPI for consistency |
-| `max_image_dimension` | int  | 4096    | Maximum width or height for extracted images. Larger images are downscaled to fit    |
-| `auto_adjust_dpi`     | bool | True    | Automatically adjust DPI based on image content quality                              |
-| `min_dpi`             | int  | 72      | Minimum DPI threshold. Images with lower DPI are upscaled                            |
-| `max_dpi`             | int  | 600     | Maximum DPI threshold. Images with higher DPI are downscaled                         |
-
-**Example:**
-
-```python
-from xberg import ExtractionConfig, ImageExtractionConfig
-
-# Basic image extraction
-config = ExtractionConfig(images=ImageExtractionConfig())
-
-# Extract images with custom DPI settings
-config = ExtractionConfig(
-    images=ImageExtractionConfig(target_dpi=150, max_image_dimension=2048, auto_adjust_dpi=False)
 )
 ```
 
 ### EmbeddingConfig
 
-Embedding generation configuration for text chunks. Configures embedding generation using ONNX models via fastembed-rs.
+Embedding generation for chunks using ONNX models.
 
-**Attributes:**
+| Field                    | Type                       | Default            | Description                                              |
+| ------------------------ | -------------------------- | ------------------ | ------------------------------------------------------- |
+| `model`                  | EmbeddingModelType \| None | "balanced" preset  | The embedding model to use.                             |
+| `normalize`              | bool                       | True               | Normalize vectors to unit length (cosine similarity).  |
+| `batch_size`             | int                        | 32                 | Texts to embed per batch.                              |
+| `show_download_progress` | bool                       | False              | Show model download progress.                          |
+| `cache_dir`              | str \| None                | None               | Custom model cache directory.                          |
 
-| Field                    | Type               | Default           | Description                                                                                 |
-| ------------------------ | ------------------ | ----------------- | ------------------------------------------------------------------------------------------- |
-| `model`                  | EmbeddingModelType | Preset "balanced" | The embedding model to use (preset, fastembed, or custom)                                   |
-| `normalize`              | bool               | True              | Whether to normalize embedding vectors to unit length (recommended for cosine similarity)   |
-| `batch_size`             | int                | 32                | Number of texts to process simultaneously. Higher values use more memory but may be faster  |
-| `show_download_progress` | bool               | False             | Display progress during embedding model download                                            |
-| `cache_dir`              | str \| None        | None              | Custom directory for caching downloaded models (defaults to ~/.cache/xberg/embeddings/) |
+### EmbeddingModelType
 
-**Example:**
+Embedding model selector. Static constructors:
+
+```python
+@staticmethod
+def preset(name: str) -> EmbeddingModelType    # "fast", "balanced", "quality", "multilingual"
+
+@staticmethod
+def fastembed(model: str, dimensions: int) -> EmbeddingModelType
+
+@staticmethod
+def custom(model_id: str, dimensions: int) -> EmbeddingModelType   # any ONNX model on HuggingFace
+```
 
 ```python
 from xberg import EmbeddingConfig, EmbeddingModelType
 
-# Basic preset embedding (recommended)
-config = EmbeddingConfig()
-
-# Specific preset with settings
-config = EmbeddingConfig(
-    model=EmbeddingModelType.preset("balanced"),
-    normalize=True,
-    batch_size=64
-)
-
-# Custom ONNX model
-config = EmbeddingConfig(
-    model=EmbeddingModelType.custom(model_id="sentence-transformers/all-MiniLM-L6-v2", dimensions=384)
-)
-
-# With custom cache directory
-config = EmbeddingConfig(cache_dir="/path/to/model/cache")
+EmbeddingConfig(model=EmbeddingModelType.preset("balanced"))
+EmbeddingConfig(model=EmbeddingModelType.custom(model_id="BAAI/bge-small-en-v1.5", dimensions=384))
 ```
 
-### EmbeddingModelType
+Presets: `fast` (384 dims), `balanced` (768 dims), `quality` (1024 dims), `multilingual` (768 dims).
 
-Embedding model type selector with multiple configurations.
+### KeywordConfig
 
-**Static Methods:**
+Keyword extraction (YAKE or RAKE).
 
-```python
-@staticmethod
-def preset(name: str) -> EmbeddingModelType
-```
-
-Use a preset configuration (recommended for most use cases). Available presets: fast, balanced, quality, multilingual.
-
-```python
-@staticmethod
-def fastembed(model: str, dimensions: int) -> EmbeddingModelType
-```
-
-Use a specific fastembed model by name.
+| Field          | Type                              | Default | Description                                |
+| -------------- | --------------------------------- | ------- | ------------------------------------------ |
+| `algorithm`    | KeywordAlgorithm \| str           | YAKE    | `KeywordAlgorithm.YAKE` or `.RAKE` (or `"yake"`/`"rake"`). |
+| `max_keywords` | int                               | 10      | Maximum number of keywords to extract.     |
+| `min_score`    | float                             | 0.0     | Minimum score threshold.                   |
+| `language`     | str \| None                       | "en"    | Language hint.                             |
+| `yake_params`  | YakeParams \| None                | None    | YAKE tuning (`window_size`).               |
+| `rake_params`  | RakeParams \| None                | None    | RAKE tuning (`min_word_length`, `max_words_per_phrase`). |
 
 ```python
-@staticmethod
-def custom(model_id: str, dimensions: int) -> EmbeddingModelType
-```
+from xberg import ExtractionConfig, KeywordConfig, KeywordAlgorithm, YakeParams
 
-Use a custom ONNX model from HuggingFace (e.g., sentence-transformers/\*).
-
-**Example:**
-
-```python
-from xberg import EmbeddingModelType, list_embedding_presets
-
-# Using the balanced preset (recommended for general use)
-model = EmbeddingModelType.preset("balanced")
-
-# Using a specific fast embedding model
-model = EmbeddingModelType.fastembed(model="BAAI/bge-small-en-v1.5", dimensions=384)
-
-# Using a custom HuggingFace model
-model = EmbeddingModelType.custom(
-    model_id="sentence-transformers/all-MiniLM-L6-v2",
-    dimensions=384
+ExtractionConfig(
+    keywords=KeywordConfig(
+        algorithm=KeywordAlgorithm.YAKE,
+        max_keywords=10,
+        min_score=0.1,
+        language="en",
+        yake_params=YakeParams(window_size=1),
+    )
 )
-
-# Listing available presets
-presets = list_embedding_presets()
-print(f"Available presets: {presets}")
 ```
 
-### TokenReductionConfig
+### PdfConfig
 
-Configuration for reducing token count in extracted content. Reduces token count to lower costs when working with LLM APIs.
-
-**Attributes:**
-
-| Field                      | Type | Default | Description                                                                                      |
-| -------------------------- | ---- | ------- | ------------------------------------------------------------------------------------------------ |
-| `mode`                     | str  | "off"   | Token reduction mode: "off", "light", "moderate", "aggressive", or "maximum"                     |
-| `preserve_important_words` | bool | True    | Preserve capitalized words, technical terms, and proper nouns even in aggressive reduction modes |
-
-**Example:**
+| Field              | Type                    | Default | Description                                       |
+| ------------------ | ----------------------- | ------- | ------------------------------------------------- |
+| `extract_images`   | bool                    | False   | Extract images from PDF documents.                |
+| `extract_tables`   | bool                    | True    | Extract tables from PDF.                          |
+| `passwords`        | list[str] \| None       | None    | Passwords to try when opening encrypted PDFs.     |
+| `extract_metadata` | bool                    | True    | Extract PDF metadata.                             |
+| `hierarchy`        | HierarchyConfig \| None | None    | Document hierarchy detection.                     |
 
 ```python
-from xberg import ExtractionConfig, TokenReductionConfig
+from xberg import ExtractionConfig, PdfConfig, HierarchyConfig
 
-# Moderate token reduction
-config = ExtractionConfig(
-    token_reduction=TokenReductionConfig(mode="moderate", preserve_important_words=True)
-)
-
-# Maximum reduction for large batches
-config = ExtractionConfig(
-    token_reduction=TokenReductionConfig(mode="maximum", preserve_important_words=True)
-)
-
-# No reduction (default)
-config = ExtractionConfig(
-    token_reduction=TokenReductionConfig(mode="off")
+ExtractionConfig(
+    pdf_options=PdfConfig(
+        extract_images=True,
+        extract_metadata=True,
+        passwords=["password1", "password2"],
+        hierarchy=HierarchyConfig(enabled=True, k_clusters=6),
+    )
 )
 ```
 
 ### LanguageDetectionConfig
 
-Configuration for detecting document language(s).
+| Field             | Type  | Default | Description                                          |
+| ----------------- | ----- | ------- | ---------------------------------------------------- |
+| `enabled`         | bool  | True    | Enable language detection.                           |
+| `min_confidence`  | float | 0.8     | Minimum confidence threshold (0.0–1.0).             |
+| `detect_multiple` | bool  | False   | Detect multiple languages instead of only the top one. |
 
-**Attributes:**
+### TokenReductionOptions
 
-| Field             | Type  | Default | Description                                                                                         |
-| ----------------- | ----- | ------- | --------------------------------------------------------------------------------------------------- |
-| `enabled`         | bool  | True    | Enable language detection for extracted content                                                     |
-| `min_confidence`  | float | 0.8     | Minimum confidence threshold (0.0-1.0) for language detection                                       |
-| `detect_multiple` | bool  | False   | Detect multiple languages in the document. When False, only the most confident language is returned |
-
-**Example:**
-
-```python
-from xberg import ExtractionConfig, LanguageDetectionConfig, extract_file_sync
-
-# Basic language detection
-config = ExtractionConfig(language_detection=LanguageDetectionConfig())
-
-# Detect multiple languages with lower confidence threshold
-config = ExtractionConfig(
-    language_detection=LanguageDetectionConfig(detect_multiple=True, min_confidence=0.6)
-)
-
-# Access detected languages in result
-result = extract_file_sync("multilingual.pdf", config=config)
-print(f"Languages: {result.detected_languages}")
-```
-
-### KeywordConfig
-
-Keyword extraction configuration.
-
-**Attributes:**
-
-| Field          | Type               | Default | Description                                                                   |
-| -------------- | ------------------ | ------- | ----------------------------------------------------------------------------- |
-| `algorithm`    | KeywordAlgorithm   | -       | Keyword extraction algorithm (KeywordAlgorithm.Yake or KeywordAlgorithm.Rake) |
-| `max_keywords` | int                | 10      | Maximum number of keywords to extract                                         |
-| `min_score`    | float              | 0.0     | Minimum score threshold                                                       |
-| `ngram_range`  | tuple[int, int]    | (1, 3)  | N-gram range for keyword extraction                                           |
-| `language`     | str \| None        | "en"    | Optional language hint                                                        |
-| `yake_params`  | YakeParams \| None | None    | YAKE-specific tuning parameters                                               |
-| `rake_params`  | RakeParams \| None | None    | RAKE-specific tuning parameters                                               |
+| Field                      | Type | Default | Description                                                            |
+| -------------------------- | ---- | ------- | --------------------------------------------------------------------- |
+| `mode`                     | str  | `""`    | `"off"`, `"light"`, `"moderate"`, `"aggressive"`, or `"maximum"`.     |
+| `preserve_important_words` | bool | True    | Preserve capitalized words, technical terms, and proper nouns.        |
 
 ### PageConfig
 
-Page extraction and tracking configuration.
-
-**Attributes:**
-
 | Field                 | Type | Default                                | Description                                  |
 | --------------------- | ---- | -------------------------------------- | -------------------------------------------- |
-| `extract_pages`       | bool | False                                  | Enable page tracking and per-page extraction |
-| `insert_page_markers` | bool | False                                  | Insert page markers into content             |
-| `marker_format`       | str  | "\\n\\n<!-- PAGE {page_num} -->\\n\\n" | Marker template containing {page_num}        |
-
-**Example:**
-
-```python
-from xberg import ExtractionConfig, PageConfig
-
-config = ExtractionConfig(pages=PageConfig(extract_pages=True))
-```
+| `extract_pages`       | bool | False                                  | Extract pages into `ExtractedDocument.pages`. |
+| `insert_page_markers` | bool | False                                  | Insert page markers into content.            |
+| `marker_format`       | str  | `"\n\n<!-- PAGE {page_num} -->\n\n"`   | Marker template containing `{page_num}`.     |
 
 ### PostProcessorConfig
 
-Configuration for post-processors in the extraction pipeline.
-
-**Attributes:**
-
 | Field                 | Type              | Default | Description                                                 |
 | --------------------- | ----------------- | ------- | ----------------------------------------------------------- |
-| `enabled`             | bool              | True    | Enable post-processors in the extraction pipeline           |
-| `enabled_processors`  | list[str] \| None | None    | Whitelist of processor names to run. None = run all enabled |
-| `disabled_processors` | list[str] \| None | None    | Blacklist of processor names to skip. None = none disabled  |
-
-**Example:**
-
-```python
-from xberg import ExtractionConfig, PostProcessorConfig
-
-# Basic post-processing with defaults
-config = ExtractionConfig(postprocessor=PostProcessorConfig())
-
-# Enable only specific processors
-config = ExtractionConfig(
-    postprocessor=PostProcessorConfig(
-        enabled=True,
-        enabled_processors=["normalize_whitespace", "fix_encoding"]
-    )
-)
-
-# Disable specific processors
-config = ExtractionConfig(
-    postprocessor=PostProcessorConfig(
-        enabled=True,
-        disabled_processors=["experimental_cleanup"]
-    )
-)
-
-# Disable all post-processing
-config = ExtractionConfig(postprocessor=PostProcessorConfig(enabled=False))
-```
+| `enabled`             | bool              | True    | Enable post-processors in the extraction pipeline.          |
+| `enabled_processors`  | list[str] \| None | None    | Whitelist of processor names to run. None = run all enabled. |
+| `disabled_processors` | list[str] \| None | None    | Blacklist of processor names to skip.                       |
 
 ### ImagePreprocessingConfig
 
-Configuration for preprocessing images before OCR. This is NOT for extracting images from documents.
-
-**Attributes:**
+Preprocessing applied to images **before OCR** (not for extracting images from documents).
 
 | Field                 | Type | Default | Description                                       |
 | --------------------- | ---- | ------- | ------------------------------------------------- |
-| `target_dpi`          | int  | 300     | Target DPI for image normalization before OCR     |
-| `auto_rotate`         | bool | True    | Automatically detect and correct image rotation   |
-| `deskew`              | bool | True    | Correct skewed images to improve OCR accuracy     |
-| `denoise`             | bool | False   | Apply denoising filters to reduce noise in images |
-| `contrast_enhance`    | bool | False   | Enhance contrast to improve text readability      |
-| `binarization_method` | str  | "otsu"  | Method for converting images to black and white   |
-| `invert_colors`       | bool | False   | Invert colors (white text on black background)    |
+| `target_dpi`          | int  | 300     | Target DPI for normalization before OCR.          |
+| `auto_rotate`         | bool | True    | Detect and correct image rotation.                |
+| `deskew`              | bool | True    | Correct skewed images.                            |
+| `denoise`             | bool | False   | Apply denoising filters.                          |
+| `contrast_enhance`    | bool | False   | Enhance contrast.                                 |
+| `binarization_method` | str  | "otsu"  | Method for black-and-white conversion.            |
+| `invert_colors`       | bool | False   | Invert colors (white text on black).              |
+
+### ImageExtractionConfig
+
+Configuration for extracting images **from** documents.
+
+| Field                 | Type | Default | Description                                       |
+| --------------------- | ---- | ------- | ------------------------------------------------- |
+| `extract_images`      | bool | True    | Enable image extraction.                          |
+| `target_dpi`          | int  | 300     | Target DPI for image normalization.               |
+| `max_image_dimension` | int  | 4096    | Maximum width/height for extracted images.        |
+| `auto_adjust_dpi`     | bool | True    | Automatically adjust DPI by content quality.      |
+| `min_dpi`             | int  | 72      | Minimum DPI threshold.                            |
+| `max_dpi`             | int  | 600     | Maximum DPI threshold.                            |
+
+## ExtractionResult (envelope) and ExtractedDocument
+
+`extract` and `extract_batch` both return an **`ExtractionResult` envelope**. Per-document data lives on each `ExtractedDocument` in `result.results`.
+
+### ExtractionResult
+
+| Field     | Type                        | Description                                  |
+| --------- | --------------------------- | -------------------------------------------- |
+| `results` | list[ExtractedDocument]     | Extracted documents in discovery/input order. |
+| `errors`  | list[ExtractionErrorItem]   | Non-fatal per-input errors.                  |
+| `summary` | ExtractionSummary           | Aggregate counts for the operation.          |
+
+`ExtractionSummary` fields: `inputs`, `results`, `errors`, `remote_urls`, `pages_crawled`, `documents_downloaded`.
+
+### ExtractedDocument
+
+| Field                 | Type                           | Description                                                         |
+| --------------------- | ------------------------------ | ----------------------------------------------------------------- |
+| `content`             | str                            | Main extracted text in the configured `output_format`.            |
+| `mime_type`           | str                            | MIME type of the source document.                                 |
+| `metadata`            | Metadata                       | Document metadata (flat — format-specific fields at the top level). |
+| `tables`              | list[Table]                    | Extracted tables (each with `cells` and `markdown`).              |
+| `detected_languages`  | list[str] \| None              | Detected ISO 639-1 codes (if language detection enabled).         |
+| `chunks`              | list[Chunk] \| None            | Text chunks (if chunking enabled).                               |
+| `images`              | list[ExtractedImage] \| None   | Extracted images (if enabled).                                   |
+| `pages`               | list[PageContent] \| None      | Per-page content (if page extraction enabled).                   |
+| `elements`            | list[Element] \| None          | Semantic elements (if `result_format="element_based"`).          |
+| `extracted_keywords`  | list[Keyword] \| None          | Extracted keywords (if enabled).                                 |
+| `quality_score`       | float \| None                  | Overall quality score (0.0–1.0).                                 |
+| `processing_warnings` | list[ProcessingWarning]        | Non-fatal warnings from the pipeline.                            |
 
 **Example:**
 
 ```python
-from xberg import TesseractConfig, ImagePreprocessingConfig
+import asyncio
+from xberg import ExtractInput, extract, ExtractionConfig, ChunkingConfig
 
-# Basic preprocessing for OCR
-config = TesseractConfig(preprocessing=ImagePreprocessingConfig())
-
-# Aggressive preprocessing for low-quality scans
-config = TesseractConfig(
-    preprocessing=ImagePreprocessingConfig(
-        target_dpi=300,
-        denoise=True,
-        contrast_enhance=True,
-        auto_rotate=True,
-        deskew=True
+async def main() -> None:
+    config = ExtractionConfig(
+        chunking=ChunkingConfig(max_characters=512),
+        output_format="markdown",
+        language_detection=None,
     )
-)
+    result = await extract(ExtractInput.from_uri("document.pdf"), config)
+    doc = result.results[0]
+
+    print(f"Content preview: {doc.content[:200]}")
+    print(f"MIME type: {doc.mime_type}")
+    print(f"Tables: {len(doc.tables)}")
+
+    if doc.detected_languages:
+        print(f"Languages: {doc.detected_languages}")
+
+    for chunk in doc.chunks or []:
+        print(f"Chunk: {chunk.content[:80]}")
+        if chunk.embedding:
+            print(f"  embedding dims: {len(chunk.embedding)}")
+
+asyncio.run(main())
 ```
 
-## ExtractionResult
+### Metadata access
 
-Result object returned by extraction functions.
-
-**Attributes:**
-
-| Field                 | Type                           | Description                                                                      |
-| --------------------- | ------------------------------ | -------------------------------------------------------------------------------- |
-| `content`             | str                            | Main extracted text content in the specified output_format                       |
-| `mime_type`           | str                            | MIME type of the processed document                                              |
-| `metadata`            | Metadata                       | Extracted document metadata (title, author, created_at, format_type, etc.)       |
-| `tables`              | list[ExtractedTable]           | Extracted tables from the document                                               |
-| `detected_languages`  | list[str] \| None              | Detected language codes (e.g., ["en", "de"]) if language detection is enabled    |
-| `chunks`              | list[Chunk] \| None            | Text chunks if chunking is enabled (each chunk has content, embedding, metadata) |
-| `images`              | list[ExtractedImage] \| None   | Extracted images if image extraction is enabled                                  |
-| `pages`               | list[PageContent] \| None      | Per-page content and metadata if page extraction is enabled                      |
-| `elements`            | list[Element] \| None          | Semantic elements if result_format="element_based"                               |
-| `output_format`       | str \| None                    | Format of the content field (plain, markdown, djot, html)                        |
-| `result_format`       | str \| None                    | Result format used (unified or element_based)                                    |
-| `extracted_keywords`  | list[ExtractedKeyword] \| None | Extracted keywords with relevance scores if keyword extraction enabled           |
-| `quality_score`       | float \| None                  | Overall quality score for the extraction result (0.0-1.0)                        |
-| `processing_warnings` | list[ProcessingWarning]        | Non-fatal warnings encountered during extraction pipeline                        |
-
-**Methods:**
+Metadata is flat — format-specific fields sit at the top level and are accessed like a mapping:
 
 ```python
-def get_page_count(self) -> int
+result = await extract(ExtractInput.from_uri("document.pdf"), ExtractionConfig())
+metadata = result.results[0].metadata
+
+if metadata.get("page_count"):
+    print(f"Pages: {metadata['page_count']}")
+if metadata.get("title"):
+    print(f"Title: {metadata['title']}")
+if metadata.get("authors"):
+    print(f"Authors: {', '.join(metadata['authors'])}")
 ```
 
-Get the total number of pages in the document.
+### Tables
 
 ```python
-def get_chunk_count(self) -> int
-```
-
-Get the total number of chunks if chunking is enabled.
-
-```python
-def get_detected_language(self) -> str | None
-```
-
-Get the most confident detected language code.
-
-```python
-def get_metadata_field(self, field_name: str) -> Any | None
-```
-
-Get a specific metadata field by name.
-
-**Example:**
-
-```python
-from xberg import extract_file_sync, ExtractionConfig, ChunkingConfig
-
-config = ExtractionConfig(
-    chunking=ChunkingConfig(max_chars=512),
-    output_format="markdown"
-)
-result = extract_file_sync("document.pdf", config=config)
-
-print(f"Content preview: {result.content[:200]}")
-print(f"MIME type: {result.mime_type}")
-print(f"Page count: {result.get_page_count()}")
-print(f"Chunk count: {result.get_chunk_count()}")
-print(f"Detected language: {result.get_detected_language()}")
-
-if result.tables:
-    print(f"Found {len(result.tables)} tables")
-
-if result.chunks:
-    first_chunk = result.chunks[0]
-    print(f"First chunk: {first_chunk.content[:100]}")
-    if first_chunk.embedding:
-        print(f"Embedding dimensions: {len(first_chunk.embedding)}")
+result = await extract(ExtractInput.from_uri("document.pdf"), ExtractionConfig())
+for table in result.results[0].tables:
+    print(f"Table with {len(table.cells)} rows")
+    print(table.markdown)
+    for row in table.cells:
+        print(row)
 ```
 
 ## Error Classes
 
-All exceptions inherit from `XbergError`, the base exception class.
+All exceptions inherit from `XbergError`. The full hierarchy is re-exported from `xberg`:
 
-### XbergError
+`XbergError` (base), `ParsingError`, `ParseError`, `OcrError`, `ValidationError`, `MissingDependencyError`, `UnsupportedFormatError`, `CacheError`, `ImageProcessingError`, `SerializationError`, `PluginError`, `ConfigError`, `SecurityError`, `TranscriptionError`, `EmbeddingError`, `RerankingError`, `XbergTimeoutError`, `IoError`, and others.
 
-Base exception class for all Xberg errors.
-
-```python
-class XbergError(Exception):
-    """Base exception for all Xberg errors."""
-```
-
-### ParsingError
-
-Raised when document parsing fails.
+> Note: the OCR exception is `OcrError` (not `OCRError`).
 
 ```python
-class ParsingError(XbergError):
-    """Document parsing failed (corrupt, malformed, etc.)."""
+import asyncio
+from xberg import (
+    ExtractInput, extract, ExtractionConfig,
+    XbergError, ParsingError, OcrError, ValidationError, MissingDependencyError,
+)
+
+async def main() -> None:
+    try:
+        result = await extract(ExtractInput.from_uri("document.pdf"), ExtractionConfig())
+    except ParsingError as e:
+        print(f"Failed to parse document: {e}")
+    except OcrError as e:
+        print(f"OCR failed: {e}")
+    except MissingDependencyError as e:
+        print(f"Missing dependency: {e}")
+    except XbergError as e:
+        print(f"Extraction failed: {e}")
+
+asyncio.run(main())
 ```
 
-### OCRError
-
-Raised when OCR processing fails.
-
-```python
-class OCRError(XbergError):
-    """OCR operation failed."""
-```
-
-### ValidationError
-
-Raised when validation fails.
-
-```python
-class ValidationError(XbergError):
-    """Validation failed (invalid parameters, constraints, format mismatches)."""
-```
-
-### MissingDependencyError
-
-Raised when required dependencies are not available.
-
-```python
-class MissingDependencyError(XbergError):
-    """Required dependency not available (easyocr, paddleocr, tesseract, etc.)."""
-
-    @staticmethod
-    def create_for_package(dependency_group: str, functionality: str, package_name: str) -> MissingDependencyError
-```
-
-**Example:**
-
-```python
-from xberg import extract_file_sync, MissingDependencyError, OCRError, ParsingError
-
-try:
-    result = extract_file_sync("document.pdf")
-except ParsingError as e:
-    print(f"Failed to parse document: {e}")
-except OCRError as e:
-    print(f"OCR failed: {e}")
-except MissingDependencyError as e:
-    print(f"Missing dependency: {e}")
-```
-
-## Utility Functions
-
-### MIME Type Detection
-
-```python
-def detect_mime_type(data: bytes | bytearray) -> str
-```
-
-Detect MIME type from file bytes using magic number detection.
-
-**Parameters:**
-
-- `data` (bytes | bytearray): File content as bytes or bytearray
-
-**Returns:** Detected MIME type (e.g., "application/pdf", "image/png")
-
-```python
-def detect_mime_type_from_path(path: str | Path) -> str
-```
-
-Detect MIME type from file path by reading the file and detecting its MIME type.
-
-**Parameters:**
-
-- `path` (str | Path): Path to the file
-
-**Returns:** Detected MIME type
-
-**Raises:**
-
-- `OSError`: If file cannot be read (file not found, permission denied, etc.)
-- `RuntimeError`: If MIME type detection fails
-
-**Example:**
-
-```python
-from xberg import detect_mime_type, detect_mime_type_from_path
-
-# From bytes
-pdf_bytes = b"%PDF-1.4\n"
-mime_type = detect_mime_type(pdf_bytes)
-
-# From path
-mime_type = detect_mime_type_from_path("document.pdf")
-```
-
-### MIME Type Validation
-
-```python
-def validate_mime_type(mime_type: str) -> str
-```
-
-Validate a MIME type string and return the canonical form.
-
-```python
-def get_extensions_for_mime(mime_type: str) -> list[str]
-```
-
-Get file extensions associated with a MIME type.
-
-**Example:**
-
-```python
-from xberg import validate_mime_type, get_extensions_for_mime
-
-canonical = validate_mime_type("application/pdf")
-extensions = get_extensions_for_mime("application/pdf")  # Returns ["pdf"]
-```
-
-### Configuration Loading
-
-```python
-def load_extraction_config_from_file(path: str | Path) -> ExtractionConfig
-```
-
-Load extraction configuration from a specific file.
-
-**Parameters:**
-
-- `path` (str | Path): Path to the configuration file (.toml, .yaml, or .json)
-
-**Returns:** ExtractionConfig parsed from the file
-
-**Raises:**
-
-- `FileNotFoundError`: If the configuration file does not exist
-- `RuntimeError`: If the file cannot be read or parsed
-- `ValueError`: If the file format is invalid or unsupported
-
-```python
-def discover_extraction_config() -> ExtractionConfig | None
-```
-
-Discover extraction configuration from the environment (deprecated).
-
-Attempts to locate a Xberg configuration file using:
-
-1. XBERG_CONFIG_PATH environment variable
-2. Search for xberg.toml, xberg.yaml, or xberg.json in current and parent directories
-
-**Returns:** ExtractionConfig if found, None otherwise
-
-**Note:** Deprecated in favor of `load_extraction_config_from_file` for more predictable behavior.
-
-**Example:**
-
-```python
-from xberg import load_extraction_config_from_file, extract_file_sync
-
-# Load from specific file
-config = load_extraction_config_from_file("xberg.toml")
-result = extract_file_sync("document.pdf", config=config)
-
-# Auto-discover configuration
-import os
-os.environ["XBERG_CONFIG_PATH"] = "config/xberg.yaml"
-# Then extraction will use the discovered config
-```
+Per-input failures during `extract_batch` are also reported non-fatally in `result.errors` (a list of `ExtractionErrorItem`) rather than raised.
 
 ## Plugin System
 
+Plugins extend the Rust pipeline. Plugin callbacks receive a single `ExtractedDocument` (with `.content`, `.mime_type`, `.metadata`), not the envelope.
+
 ### Registering Post-Processors
 
-```python
-def register_post_processor(processor: Any) -> None
-```
+`register_post_processor(processor)` — runs after extraction to enrich each result.
 
-Register a Python PostProcessor with the Rust core. Once registered, the processor will be called automatically after extraction to enrich results.
-
-**Required Methods:**
-
-- `name() -> str`: Return processor name (must be non-empty)
-- `process(result: ExtractionResult) -> ExtractionResult`: Process and enrich the extraction result
-- `processing_stage() -> str`: Return "early", "middle", or "late"
-
-**Optional Methods:**
-
-- `initialize() -> None`: Called when processor is registered
-- `shutdown() -> None`: Called when processor is unregistered
-
-**Example:**
+Expected methods: `name() -> str`, `version() -> str`, `process(result: ExtractedDocument) -> ExtractedDocument`. Optional: `processing_stage() -> str` (`"early"`, `"middle"`, `"late"`), `should_process(result) -> bool`, `initialize()`, `shutdown()`.
 
 ```python
-from xberg import register_post_processor, ExtractionResult
+from xberg import register_post_processor, ExtractedDocument
 
-class EntityExtractor:
+class WordCountProcessor:
     def name(self) -> str:
-        return "entity_extraction"
+        return "word_count"
+
+    def version(self) -> str:
+        return "1.0.0"
 
     def processing_stage(self) -> str:
         return "early"
 
-    def process(self, result: ExtractionResult) -> ExtractionResult:
-        entities = {"PERSON": ["John Doe"], "ORG": ["Microsoft"]}
-        result.metadata["entities"] = entities
+    def process(self, result: ExtractedDocument) -> ExtractedDocument:
+        result.metadata["word_count"] = len(result.content.split())
         return result
 
-register_post_processor(EntityExtractor())
-```
+    def should_process(self, result: ExtractedDocument) -> bool:
+        return bool(result.content)
 
-### Registering OCR Backends
-
-```python
-def register_ocr_backend(backend: Any) -> None
-```
-
-Register a Python OCR backend with the Rust core.
-
-**Required Methods:**
-
-- `name() -> str`: Return backend name (must be non-empty)
-- `supported_languages() -> list[str]`: Return list of supported language codes
-- `process_image(image_bytes: bytes, language: str) -> OcrResult`: Process image and return OCR result
-- `process_file(path: str, language: str) -> OcrResult`: Process file and return OCR result
-- `initialize() -> None`: Called when backend is registered
-- `shutdown() -> None`: Called when backend is unregistered
-- `version() -> str`: Return backend version string
-
-**Example:**
-
-```python
-from xberg import register_ocr_backend
-
-class MyOcrBackend:
-    def name(self) -> str:
-        return "my-ocr"
-
-    def supported_languages(self) -> list[str]:
-        return ["eng", "deu", "fra"]
-
-    def process_image(self, image_bytes: bytes, language: str) -> dict:
-        return {
-            "content": "extracted text",
-            "metadata": {"confidence": 0.95},
-            "tables": []
-        }
-
-register_ocr_backend(MyOcrBackend())
+register_post_processor(WordCountProcessor())
 ```
 
 ### Registering Validators
 
-```python
-def register_validator(validator: Any) -> None
-```
+`register_validator(validator)` — runs after extraction; raising fails the extraction.
 
-Register a Python Validator with the Rust core. Validators are called automatically after extraction to validate results.
-
-**Required Methods:**
-
-- `name() -> str`: Return validator name (must be non-empty)
-- `validate(result: ExtractionResult) -> None`: Validate the extraction result (raise error to fail)
-
-**Optional Methods:**
-
-- `should_validate(result: ExtractionResult) -> bool`: Check if validator should run (defaults to True)
-- `priority() -> int`: Return priority (defaults to 50, higher runs first)
-
-**Example:**
+Expected methods: `name() -> str`, `version() -> str`, `validate(result: ExtractedDocument) -> None`. Optional: `should_validate(result) -> bool`, `priority() -> int` (higher runs first), `initialize()`, `shutdown()`.
 
 ```python
-from xberg import register_validator, ValidationError, ExtractionResult
+from xberg import register_validator, ExtractedDocument, ValidationError
 
 class MinLengthValidator:
+    def __init__(self, min_length: int = 100):
+        self.min_length = min_length
+
     def name(self) -> str:
         return "min_length_validator"
+
+    def version(self) -> str:
+        return "1.0.0"
 
     def priority(self) -> int:
         return 100
 
-    def validate(self, result: ExtractionResult) -> None:
-        if len(result.content) < 100:
-            raise ValidationError("Content too short")
+    def validate(self, result: ExtractedDocument) -> None:
+        if len(result.content) < self.min_length:
+            raise ValidationError(f"Content too short: {len(result.content)}")
 
 register_validator(MinLengthValidator())
 ```
 
-### Plugin Management Functions
+### Registering Document Extractors
+
+`register_document_extractor(extractor)` — adds support for a custom format.
+
+Expected methods: `name() -> str`, `version() -> str`, `supported_mime_types() -> list[str]`, `priority() -> int`, `extract(content: bytes, mime_type: str, config: dict) -> ExtractedDocument`. Optional: `initialize()`, `shutdown()`.
 
 ```python
-def list_post_processors() -> list[str]
+from xberg import register_document_extractor, ExtractedDocument
+import json
+
+class CustomJsonExtractor:
+    def name(self) -> str:
+        return "custom-json-extractor"
+
+    def version(self) -> str:
+        return "1.0.0"
+
+    def supported_mime_types(self) -> list[str]:
+        return ["application/json"]
+
+    def priority(self) -> int:
+        return 50
+
+    def extract(self, content: bytes, mime_type: str, config: dict) -> ExtractedDocument:
+        data = json.loads(content)
+        return {"content": json.dumps(data, indent=2), "mime_type": "application/json"}
+
+register_document_extractor(CustomJsonExtractor())
 ```
 
-List names of all registered post-processors.
+### Registering OCR and Embedding Backends
+
+`register_ocr_backend(backend)` and `register_embedding_backend(backend)` plug in custom OCR/embedding engines.
 
 ```python
-def list_validators() -> list[str]
+from xberg import register_embedding_backend
+
+class MyEmbedder:
+    def name(self) -> str:
+        return "my-embedder"
+
+    def version(self) -> str:
+        return "1.0.0"
+
+    def dimensions(self) -> int:
+        return 768
+
+    def embed(self, texts: list[str]) -> list[list[float]]:
+        ...  # return one vector per text
+
+register_embedding_backend(MyEmbedder())
 ```
 
-List names of all registered validators.
+Reference an embedding backend from config via `EmbeddingConfig(model={"type": "plugin", "name": "my-embedder"})`.
 
-```python
-def list_ocr_backends() -> list[str]
-```
-
-List names of all available OCR backends.
-
-```python
-def unregister_post_processor(name: str) -> None
-```
-
-Unregister a post-processor by name.
-
-```python
-def unregister_validator(name: str) -> None
-```
-
-Unregister a validator by name.
-
-```python
-def unregister_ocr_backend(name: str) -> None
-```
-
-Unregister an OCR backend by name.
-
-```python
-def clear_post_processors() -> None
-```
-
-Clear all registered post-processors.
-
-```python
-def clear_validators() -> None
-```
-
-Clear all registered validators.
-
-```python
-def clear_ocr_backends() -> None
-```
-
-Clear all registered OCR backends.
-
-## Format Enums
-
-### OutputFormat
-
-Output format for extraction results.
-
-```python
-class OutputFormat(str, Enum):
-    PLAIN = "plain"         # Plain text format
-    MARKDOWN = "markdown"   # Markdown format
-    DJOT = "djot"          # Djot lightweight markup format
-    HTML = "html"          # HTML format
-```
-
-### ResultFormat
-
-Result format controlling extraction output structure.
-
-```python
-class ResultFormat(str, Enum):
-    UNIFIED = "unified"                # All content in `content` field
-    ELEMENT_BASED = "element_based"   # Unstructured-compatible output with semantic elements
-```
-
-## Error Handling
-
-### Error Code Functions
-
-```python
-def get_last_error_code() -> int
-```
-
-Get the last error code from the FFI layer.
-
-**Returns:**
-
-- 0 (SUCCESS): No error occurred
-- 1 (GENERIC_ERROR): Generic unspecified error
-- 2 (PANIC): A panic occurred in the Rust core
-- 3 (INVALID_ARGUMENT): Invalid argument provided
-- 4 (IO_ERROR): I/O operation failed
-- 5 (PARSING_ERROR): Document parsing failed
-- 6 (OCR_ERROR): OCR operation failed
-- 7 (MISSING_DEPENDENCY): Required dependency not available
-
-```python
-def get_error_details() -> dict[str, Any]
-```
-
-Get detailed error information from the FFI layer.
-
-**Returns:** dict with keys:
-
-- `message` (str): Human-readable error message
-- `error_code` (int): Numeric error code (0-7)
-- `error_type` (str): Error type name (e.g., "validation", "ocr")
-- `source_file` (str | None): Source file path if available
-- `source_function` (str | None): Function name if available
-- `source_line` (int): Line number (0 if unknown)
-- `context_info` (str | None): Additional context if available
-- `is_panic` (bool): Whether error came from a panic
-
-```python
-def classify_error(message: str) -> int
-```
-
-Classify an error message into a Xberg error code.
-
-**Parameters:**
-
-- `message` (str): The error message to classify
-
-**Returns:** int error code (0-7) representing the classification
-
-```python
-def error_code_name(code: int) -> str
-```
-
-Get the human-readable name of an error code.
-
-**Parameters:**
-
-- `code` (int): Numeric error code (0-7)
-
-**Returns:** Human-readable error code name (e.g., "validation", "ocr")
-
-**Example:**
-
-```python
-from xberg import get_error_details, get_last_error_code, error_code_name, classify_error
-
-try:
-    result = extract_file_sync("document.pdf")
-except Exception as e:
-    code = get_last_error_code()
-    if code:
-        print(f"Error code: {code} ({error_code_name(code)})")
-
-    details = get_error_details()
-    print(f"Error: {details['message']}")
-    print(f"Type: {details['error_type']}")
-
-    classified = classify_error(str(e))
-    print(f"Classified as: {error_code_name(classified)}")
-```
-
-## Validation Functions
-
-### Parameter Validation
-
-```python
-def validate_chunking_params(max_chars: int, max_overlap: int) -> bool
-```
-
-Validate chunking parameters.
-
-```python
-def validate_confidence(confidence: float) -> bool
-```
-
-Validate confidence value (0.0-1.0).
-
-```python
-def validate_dpi(dpi: int) -> bool
-```
-
-Validate DPI value.
-
-```python
-def validate_tesseract_psm(psm: int) -> bool
-```
-
-Validate Tesseract Page Segmentation Mode.
-
-```python
-def validate_tesseract_oem(oem: int) -> bool
-```
-
-Validate Tesseract OCR Engine Mode.
-
-```python
-def validate_ocr_backend(backend: str) -> bool
-```
-
-Validate OCR backend name.
-
-```python
-def validate_language_code(code: str) -> bool
-```
-
-Validate language code format.
-
-```python
-def validate_token_reduction_level(level: str) -> bool
-```
-
-Validate token reduction level.
-
-```python
-def validate_output_format(output_format: str) -> bool
-```
-
-Validate output format string.
-
-```python
-def validate_binarization_method(method: str) -> bool
-```
-
-Validate binarization method for image preprocessing.
-
-### Getting Valid Values
-
-```python
-def get_valid_binarization_methods() -> list[str]
-```
-
-Get list of valid binarization methods.
-
-```python
-def get_valid_language_codes() -> list[str]
-```
-
-Get list of valid language codes.
-
-```python
-def get_valid_ocr_backends() -> list[str]
-```
-
-Get list of valid OCR backend names.
-
-```python
-def get_valid_token_reduction_levels() -> list[str]
-```
-
-Get list of valid token reduction levels.
-
-```python
-def list_embedding_presets() -> list[str]
-```
-
-List available embedding presets.
-
-```python
-def get_embedding_preset(name: str) -> EmbeddingPreset | None
-```
-
-Get details about a specific embedding preset.
-
-**Example:**
+### Plugin Management
 
 ```python
 from xberg import (
-    validate_dpi,
-    get_valid_binarization_methods,
-    list_embedding_presets,
-    get_embedding_preset
+    list_document_extractors, list_post_processors, list_validators, list_ocr_backends,
+    unregister_post_processor, unregister_validator, unregister_document_extractor, unregister_ocr_backend,
+    clear_post_processors, clear_validators, clear_document_extractors, clear_ocr_backends,
 )
 
-# Validate parameters
-if not validate_dpi(300):
-    print("Invalid DPI")
-
-# List valid values
-binarization_methods = get_valid_binarization_methods()
-presets = list_embedding_presets()
-
-# Get preset details
-preset = get_embedding_preset("balanced")
-if preset:
-    print(f"Balanced preset: {preset.description}")
-    print(f"Dimensions: {preset.dimensions}")
-    print(f"Recommended chunk size: {preset.chunk_size}")
+print(list_post_processors())
+unregister_post_processor("word_count")
+clear_validators()
 ```
 
-## Configuration Utilities
+## Format Enums
 
-### Config Manipulation
+### Content output format (`output_format`)
 
-```python
-def config_to_json(config: ExtractionConfig) -> str
-```
+`"plain"` (default), `"markdown"`, `"djot"`, `"html"`.
 
-Convert ExtractionConfig to JSON string.
+### Result format (`result_format`)
 
-```python
-def config_get_field(config: ExtractionConfig, field_name: str) -> Any | None
-```
+`"unified"` (default — all content in `content`) or `"element_based"` (Unstructured-compatible semantic elements in `elements`).
 
-Get a specific field value from ExtractionConfig.
+## Other Functions
 
 ```python
-def config_merge(base: ExtractionConfig, override: ExtractionConfig) -> None
-```
+from xberg import list_supported_formats, __version__
 
-Merge override config into base config (mutates base).
-
-**Example:**
-
-```python
-from xberg import ExtractionConfig, config_to_json, config_get_field, config_merge
-
-config = ExtractionConfig(use_cache=True, enable_quality_processing=False)
-
-# Convert to JSON
-json_str = config_to_json(config)
-print(json_str)
-
-# Get field
-use_cache = config_get_field(config, "use_cache")
-print(f"use_cache: {use_cache}")
-
-# Merge configs
-override = ExtractionConfig(use_cache=False)
-config_merge(config, override)
-```
-
-## Version Information
-
-```python
-__version__: str
-```
-
-Current version of the xberg package.
-
-**Example:**
-
-```python
-from xberg import __version__
-
-print(f"Xberg version: {__version__}")
+formats = list_supported_formats()   # all supported document formats
+print(__version__)
 ```

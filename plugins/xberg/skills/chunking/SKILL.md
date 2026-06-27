@@ -7,7 +7,7 @@ description: Use when splitting extracted text into chunks for LLM context windo
 
 Use this when feeding documents into an LLM context window or a vector
 store. Xberg chunks two ways: inline during extraction (chunks land on
-`result.chunks`), or standalone via the `chunk` command for text you
+each document's `chunks` field), or standalone via the `chunk` command for text you
 already have. Sizing is character-based by default, or token-based when a
 tokenizer model is supplied.
 
@@ -111,21 +111,22 @@ xberg extract report.pdf --config xberg.toml --format json
 
 ## Programmatic access
 
-From Python, enable chunking on the config and read `result.chunks`:
+From Python, enable chunking on the config and read the chunks off the
+document in the result envelope (`result.results[0].chunks`):
 
 ```python
-from xberg import extract_file_sync, ExtractionConfig, ChunkingConfig
+from xberg import ExtractInput, extract, ExtractionConfig, ChunkingConfig
 
 config = ExtractionConfig(
-    chunking=ChunkingConfig(max_chars=1000, max_overlap=200),
+    chunking=ChunkingConfig(max_characters=1000, overlap=200),
 )
-result = extract_file_sync("report.pdf", config=config)
-for chunk in result.chunks:
-    print(len(chunk))
+result = await extract(ExtractInput.from_uri("report.pdf"), config)
+for chunk in result.results[0].chunks or []:
+    print(len(chunk.content))
 ```
 
-> Python `ChunkingConfig` uses `max_chars` / `max_overlap`. Rust uses
-> `max_characters` / `overlap`. See `references/python-api.md` and
+> Python and Rust `ChunkingConfig` use `max_characters` / `overlap`; Node uses
+> `maxChars` / `maxOverlap`. See `references/python-api.md` and
 > `references/rust-api.md` in the sibling `xberg` skill.
 
 ## Picking parameters

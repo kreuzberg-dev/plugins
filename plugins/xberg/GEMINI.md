@@ -22,7 +22,7 @@ brew install xberg-io/tap/xberg
 npx @xberg-io/xberg-cli --help
 uvx --from xberg-cli xberg --help
 # or download a prebuilt binary from the latest GitHub release, or build from source:
-cargo install --git https://github.com/xberg-io/xberg xberg-cli
+cargo install xberg-cli
 ```
 
 ## Skills in this plugin

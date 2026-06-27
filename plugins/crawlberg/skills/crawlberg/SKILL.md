@@ -4,9 +4,10 @@ description: >-
   Crawl, scrape, and convert websites to Markdown using the local crawlberg
   CLI and its MCP server. Use when the user wants to fetch a page, follow
   links across a domain, enumerate URLs, or drive a real browser. Covers
-  installation, the subcommands (scrape, crawl, map, interact, mcp, serve),
-  output formats (JSON + Markdown), browser fallback, and when to prefer the
-  MCP server over shelling out.
+  installation, the subcommands (scrape, crawl, map, interact, batch-scrape,
+  batch-crawl, download, citations, version, mcp, serve), output formats
+  (JSON + Markdown), browser fallback, and when to prefer the MCP server over
+  shelling out.
 license: MIT
 metadata:
   author: xberg-io
@@ -61,16 +62,38 @@ launches it on demand). Skip the install if you only plan to use
 ## Command map
 
 ```text
-crawlberg scrape <url>     # single page → JSON or Markdown
-crawlberg crawl <url...>   # follow links, BFS, depth-bounded
-crawlberg map <url>        # enumerate URLs via sitemaps + link extraction
-crawlberg interact <url>   # browser actions: click, type, scroll
-crawlberg mcp              # MCP server (stdio) — auto-registered (`mcp` feature)
-crawlberg serve            # REST API server (`api` feature)
+crawlberg scrape <url>          # single page → JSON or Markdown
+crawlberg crawl <url...>        # follow links, BFS, depth-bounded
+crawlberg map <url>             # enumerate URLs via sitemaps + link extraction
+crawlberg interact <url>        # browser actions: click, type, scroll
+crawlberg batch-scrape <url...> # scrape many URLs concurrently
+crawlberg batch-crawl <url...>  # crawl many seed URLs concurrently
+crawlberg download <url>        # download a document, report file metadata
+crawlberg citations <input>     # markdown links → numbered citations (text or @file.md)
+crawlberg version               # print the crawlberg version as JSON
+crawlberg mcp                   # MCP server (stdio) — auto-registered (`mcp` feature)
+crawlberg serve                 # REST API server (`api` feature)
 ```
 
-Batch behaviour is built into `crawl`: pass multiple seed URLs and the engine
-fans out via `batch_crawl` internally.
+`crawl` also handles batching implicitly: pass multiple seed URLs and it fans
+out via `batch_crawl` internally. The explicit `batch-scrape` and `batch-crawl`
+subcommands expose the same concurrency for many independent URLs.
+
+Per-subcommand flags:
+
+| Subcommand     | Positional        | Key flags                                                                                                      |
+| -------------- | ----------------- | ------------------------------------------------------------------------------------------------------------- |
+| `scrape`       | `<url>`           | `--proxy`, `--user-agent` (plus shared flags below)                                                            |
+| `crawl`        | `<url...>`        | `--depth`/`-d` (2), `--max-pages`/`-n`, `--concurrent`/`-c` (10), `--rate-limit` (200), `--stay-on-domain`, `--proxy`, `--user-agent` |
+| `map`          | `<url>`           | `--limit`, `--search`                                                                                          |
+| `interact`     | `<url>`           | `--actions <json>` (required)                                                                                  |
+| `batch-scrape` | `<url...>`        | `--concurrent`/`-c` (10), `--proxy`, `--user-agent`                                                            |
+| `batch-crawl`  | `<url...>`        | `--depth`/`-d` (2), `--max-pages`/`-n`, `--concurrent`/`-c` (10), `--rate-limit` (200), `--stay-on-domain`, `--proxy`, `--user-agent` |
+| `download`     | `<url>`           | `--max-size`                                                                                                   |
+| `citations`    | `<input>`         | none (input is markdown text or `@file.md`)                                                                    |
+| `version`      | —                 | none                                                                                                           |
+| `serve`        | —                 | `--host` (0.0.0.0), `--port` (3000)                                                                            |
+| `mcp`          | —                 | none (stdio transport)                                                                                         |
 
 ### Shared flags
 
@@ -85,6 +108,14 @@ fans out via `batch_crawl` internally.
 
 The `--config` flag accepts the full `CrawlConfig` schema. Anything you set
 explicitly on the CLI overrides the corresponding JSON field.
+
+These shared flags apply to the crawl/scrape-family subcommands. `--format`,
+`--browser-mode`, `--browser-endpoint`, and `--config` cover `scrape`, `crawl`,
+`map`, `interact`, `batch-scrape`, and `batch-crawl`; `download` takes
+`--timeout`, `--browser-mode`, `--browser-endpoint`, `--max-size`, and
+`--config` (no `--format`). `--respect-robots-txt` applies to `scrape`,
+`crawl`, `map`, `batch-scrape`, and `batch-crawl`. `citations` and `version`
+take no shared flags.
 
 ## Scrape a single page
 
@@ -150,6 +181,21 @@ crawlberg mcp
 
 `mcp` is a stdio-transport server and takes no arguments. It requires a binary
 built with the `mcp` feature (see Installation).
+
+The server registers nine tools (the same set is served over the Streamable
+HTTP transport when running `crawlberg serve`):
+
+| Tool                 | Purpose                                                          | Parameters                                                                                 |
+| -------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `scrape`             | Scrape one URL to Markdown or JSON (content, metadata, links).  | `url` (required), `format` (`markdown`\|`json`), `use_browser` (bool — force browser)       |
+| `crawl`              | Follow links from a URL, bounded by depth/page count.          | `url` (required), `max_depth`, `max_pages`, `format`, `stay_on_domain`                      |
+| `map`                | Discover all URLs via links and sitemaps.                      | `url` (required), `limit`, `search`, `respect_robots_txt`                                   |
+| `batch_scrape`       | Scrape multiple URLs concurrently.                            | `urls` (required array), `format`, `concurrency`                                            |
+| `batch_crawl`        | Crawl multiple seed URLs concurrently.                       | `urls` (required array), `max_depth`, `max_pages`, `format`, `stay_on_domain`, `concurrency` |
+| `download`           | Download a document and return file metadata.                | `url` (required), `max_size`                                                                |
+| `interact`           | Execute browser actions on a page (mutating/destructive).    | `url` (required), `actions` (required array of action objects)                              |
+| `generate_citations` | Rewrite markdown links as numbered citations + reference list. | `markdown` (required)                                                                       |
+| `get_version`        | Return the crawlberg library version.                        | none                                                                                        |
 
 Prefer MCP tools over shelling out when both are available:
 

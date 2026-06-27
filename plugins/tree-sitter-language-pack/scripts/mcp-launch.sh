@@ -18,15 +18,14 @@
 #   c) uvx: probe the published PyPI CLI package, and if it exposes the CLI, run it.
 #   d) brew install xberg-io/tap/ts-pack, then exec the on-PATH binary.
 #   e) Direct download of the prebuilt CLI archive from the GitHub LATEST release.
-#   f) Fail with guidance (brew tap, or `cargo install --git` from source).
+#   f) Fail with guidance (brew tap, or `cargo install ts-pack-cli` from crates.io).
 #
 # `auto` tries every step in order; an explicit value pins that single channel
 # (each still first honors an already-present binary in step (a)).
 #
-# The ts-pack CLI crate is NOT published to crates.io, so `cargo install
-# ts-pack-cli` (registry form) does not work and is intentionally absent. The
-# only cargo path that works is `cargo install --git`, which compiles from the
-# repo — see the final guidance below.
+# The ts-pack CLI crate is published to crates.io, so `cargo install ts-pack-cli`
+# (registry form) compiles and installs the CLI from the registry — see the final
+# guidance below.
 #
 # Note on npx/uvx: the ts-pack-cli npm and PyPI proxy packages are being rolled
 # out (the package self-installs/runs the binary, basemind-style). They may not
@@ -254,6 +253,6 @@ fi
 # ---- (f) Give up ------------------------------------------------------------
 die "could not locate or install ts-pack. Install it manually with one of:
   brew install xberg-io/tap/ts-pack
-  cargo install --git https://github.com/xberg-io/tree-sitter-language-pack ts-pack-cli
+  cargo install ts-pack-cli
   or download a prebuilt archive from https://github.com/${REPO}/releases/latest
 then ensure 'ts-pack' is on PATH and retry."

@@ -17,15 +17,13 @@
 #   c) uvx: probe the published PyPI package, and if it exposes the CLI, run it.
 #   d) brew install xberg-io/tap/xberg, then exec the on-PATH binary.
 #   e) Direct download of the prebuilt CLI archive from the GitHub LATEST release.
-#   f) Fail with guidance (brew tap, or `cargo install --git` from source).
+#   f) Fail with guidance (brew tap, or `cargo install xberg-cli` from crates.io).
 #
 # `auto` tries every step in order; an explicit value pins that single channel
 # (each still first honors an already-present binary in step (a)).
 #
-# The xberg CLI crate is NOT published to crates.io, so `cargo install
-# xberg-cli` (registry form) does not work and is intentionally absent. The
-# only cargo path that works is `cargo install --git`, which compiles from the
-# repo — see the final guidance below.
+# The xberg CLI crate is published to crates.io, so `cargo install xberg-cli`
+# (registry form) works — see the final guidance below.
 #
 # Note on npx/uvx: the xberg npm and PyPI CLI packages self-install/run the binary
 # (basemind-style). Each is PROBED first and falls through cleanly if absent.
@@ -246,6 +244,6 @@ fi
 # ---- (f) Give up ------------------------------------------------------------
 die "could not locate or install xberg. Install it manually with one of:
   brew install xberg-io/tap/xberg
-  cargo install --git https://github.com/xberg-io/xberg xberg-cli
+  cargo install xberg-cli
   or download a prebuilt archive from https://github.com/xberg-io/xberg/releases/latest
 then ensure 'xberg' is on PATH and retry."

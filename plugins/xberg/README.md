@@ -35,7 +35,7 @@ uvx --from xberg-cli xberg --help
 Or download a prebuilt binary from the [latest GitHub release](https://github.com/xberg-io/xberg/releases/latest), or build from source (the `xberg-cli` crate is not published to crates.io, so install from git):
 
 ```bash
-cargo install --git https://github.com/xberg-io/xberg xberg-cli --features mcp
+cargo install xberg-cli --features mcp
 ```
 
 The Python (`xberg`) and Node (`@xberg-io/xberg`) packages are language SDKs/bindings, not the CLI. The prebuilt CLI binaries (brew, GitHub release) include the MCP server; a source build enables it with `--features mcp` (`mcp` is not in the CLI's default feature set).

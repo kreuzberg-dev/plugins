@@ -45,7 +45,7 @@ Or in a config file:
 algorithm = "rake"       # "yake" or "rake"
 max_keywords = 10        # default 10
 min_score = 0.0          # filter below this score (ranges differ per algorithm)
-ngram_range = [1, 3]     # unigrams..trigrams (default)
+ngram_range = [1, 3]     # unigrams..trigrams (default); config-file only
 language = "en"          # stopword language; omit to skip stopword filtering
 ```
 
@@ -60,7 +60,8 @@ Field notes:
   *lower-is-better* while RAKE scores are *higher-is-better*, so a single
   threshold behaves differently per algorithm.
 - `ngram_range` is `[min, max]`: `[1,1]` unigrams only, `[1,2]` adds
-  bigrams, `[1,3]` (default) adds trigrams.
+  bigrams, `[1,3]` (default) adds trigrams. Config-file only — it is not a
+  field on the language bindings' `KeywordConfig`.
 - `language` enables stopword filtering for that language; omit it to
   disable stopword filtering entirely.
 
@@ -128,17 +129,18 @@ xberg cache warm --all-embeddings             # all four presets
 
 ## Programmatic access
 
-Keywords and detected languages live on the extraction result:
+Keywords and detected languages live on the document in the result envelope:
 
 ```python
-from xberg import extract_file_sync, ExtractionConfig
+from xberg import ExtractInput, extract, ExtractionConfig, KeywordConfig, KeywordAlgorithm
 
-result = extract_file_sync(
-    "paper.pdf",
-    config=ExtractionConfig(),  # configure keywords/language_detection on the config
+config = ExtractionConfig(
+    keywords=KeywordConfig(algorithm=KeywordAlgorithm.YAKE, max_keywords=15, language="en"),
 )
-print(result.extracted_keywords)   # extracted keywords (when enabled)
-print(result.detected_languages)   # detected languages (when enabled)
+result = await extract(ExtractInput.from_uri("paper.pdf"), config)
+doc = result.results[0]
+print(doc.extracted_keywords)   # extracted keywords (when enabled)
+print(doc.detected_languages)   # detected languages (when enabled)
 ```
 
 See `references/python-api.md` and `references/configuration.md` in the

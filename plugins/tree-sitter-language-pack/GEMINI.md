@@ -16,14 +16,15 @@ separately:
 brew install xberg-io/tap/ts-pack
 # or run without a persistent install (the npm package's bin is `ts-pack`):
 npx @xberg-io/ts-pack-cli --help
-# or download a prebuilt binary from the latest GitHub release, or build from source:
-cargo install --git https://github.com/xberg-io/tree-sitter-language-pack ts-pack-cli
+# or download a prebuilt binary from the latest GitHub release, or install from crates.io:
+cargo install ts-pack-cli
 # binary is installed as `ts-pack`
 ```
 
 SDKs are available for Python (`pip install tree-sitter-language-pack`),
 Node.js/TypeScript (`npm install @xberg-io/tree-sitter-language-pack`),
-Rust, and ten more languages plus WebAssembly.
+and Rust, with polyglot bindings for 15 languages including WebAssembly, a
+C ABI, and JNI.
 
 ## Skills in this plugin
 

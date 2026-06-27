@@ -101,22 +101,23 @@ xberg extract report.pdf --format json
 
 ## Programmatic access
 
-From Python, structured tables live on `result.tables`:
+From Python, structured tables live on the document in the result envelope
+(`result.results[0].tables`):
 
 ```python
-from xberg import extract_file_sync, ExtractionConfig, LayoutDetectionConfig
+from xberg import ExtractInput, extract, ExtractionConfig, LayoutDetectionConfig
 
 config = ExtractionConfig(
-    layout_detection=LayoutDetectionConfig(enabled=True, table_model="tatr"),
+    layout=LayoutDetectionConfig(table_model="tatr"),
     output_format="markdown",
 )
-result = extract_file_sync("report.pdf", config=config)
-for table in result.tables:
+result = await extract(ExtractInput.from_uri("report.pdf"), config)
+for table in result.results[0].tables:
     print(table.markdown)        # rendered markdown
     print(table.cells[0][0])     # cell access
 ```
 
-Node.js mirrors this (`extractFile`, `result.tables`, camelCase fields).
+Node.js mirrors this (`extract`, `output.results[0].tables`, camelCase fields).
 See `references/python-api.md` and `references/nodejs-api.md` in the
 sibling `xberg` skill for full type signatures.
 

@@ -17,10 +17,11 @@ metadata:
 # Tree-Sitter Language Pack
 
 tree-sitter-language-pack is a polyglot code parsing and analysis library
-with a high-performance Rust core and native bindings for Python,
-Node.js/TypeScript, Ruby, Go, Java, C#, PHP, Elixir, Dart, Kotlin (Android),
-Swift, Zig, and WebAssembly. It compiles 306 tree-sitter grammars into
-efficient parsers and exposes code intelligence on top of them.
+with a high-performance Rust core and polyglot bindings for 15 languages —
+Python, Node.js/TypeScript, Ruby, Go, Java, C#, PHP, Elixir, Dart,
+Kotlin (Android), Swift, Zig, and WebAssembly, plus a C ABI and JNI. It
+compiles 306 tree-sitter grammars into efficient parsers and exposes code
+intelligence on top of them.
 
 ## Capabilities
 
@@ -38,8 +39,8 @@ efficient parsers and exposes code intelligence on top of them.
   (SDK only).
 - **Parser cache management** — download, list, inspect, and clean the
   on-demand parser cache for offline/CI use.
-- **Distribution** — 12 language bindings plus a WebAssembly build and the
-  `ts-pack` CLI.
+- **Distribution** — 15 language bindings (including WebAssembly, a C ABI,
+  and JNI) plus the `ts-pack` CLI.
 
 Use this skill when writing code that parses source in any supported
 language, extracts code metadata, chunks code for an LLM, detects a
@@ -82,8 +83,8 @@ npx @xberg-io/ts-pack-cli --help
 uvx --from ts-pack-cli ts-pack --help
 # or download a prebuilt binary from the latest GitHub release:
 #   https://github.com/xberg-io/tree-sitter-language-pack/releases/latest
-# or build from source:
-cargo install --git https://github.com/xberg-io/tree-sitter-language-pack ts-pack-cli
+# or install from crates.io:
+cargo install ts-pack-cli
 # binary is installed as `ts-pack`
 ```
 
@@ -130,6 +131,7 @@ C#, PHP, Elixir, Dart, Kotlin (Android), Swift, Zig, and WebAssembly
 | `cache-dir` | Print the effective cache directory. |
 | `init` | Write a `language-pack.toml` config (`--languages`, `--cache-dir`). |
 | `completions <shell>` | Generate shell completions. |
+| `mcp` | Start the MCP server (`--transport stdio`). |
 
 \* Language detection is implicit in `parse`/`process`. There is no
 `detect` or `validate` subcommand; diagnostics come from

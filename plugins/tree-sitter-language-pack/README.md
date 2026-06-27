@@ -33,8 +33,8 @@ npx @xberg-io/ts-pack-cli --help
 uvx --from ts-pack-cli ts-pack --help
 # or download a prebuilt binary from the latest GitHub release:
 #   https://github.com/xberg-io/tree-sitter-language-pack/releases/latest
-# or build from source (binary is installed as `ts-pack`):
-cargo install --git https://github.com/xberg-io/tree-sitter-language-pack ts-pack-cli
+# or install from crates.io (binary is installed as `ts-pack`):
+cargo install ts-pack-cli
 ```
 
 Parser libraries download on demand the first time a language is used. For
@@ -114,6 +114,7 @@ expose it. See the **using-the-mcp-server** skill for details.
 | `cache-dir` | Print the cache directory. |
 | `init` | Write a `language-pack.toml` config. |
 | `completions <shell>` | Generate shell completions. |
+| `mcp` | Start the MCP server (`--transport stdio`). |
 
 `process` flags: `--structure`, `--imports`, `--exports`, `--comments`,
 `--symbols`, `--docstrings`, `--diagnostics`, `--all`, `--chunk-size <bytes>`,

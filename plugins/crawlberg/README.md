@@ -40,7 +40,7 @@ Headless fallback requires Chrome/Chromium on your system. The CLI launches it o
 
 | Skill | Trigger |
 |-------|---------|
-| **crawlberg** | Crawl, scrape, and convert websites to Markdown using the local crawlberg CLI and its MCP server. Use when the user wants to fetch a page, follow links across a domain, enumerate URLs, or drive a real browser. Covers installation, the subcommands (scrape, crawl, map, interact, mcp, serve), output formats (JSON + Markdown), browser fallback, and when to prefer the MCP server over shelling out. |
+| **crawlberg** | Crawl, scrape, and convert websites to Markdown using the local crawlberg CLI and its MCP server. Use when the user wants to fetch a page, follow links across a domain, enumerate URLs, or drive a real browser. Covers installation, the subcommands (scrape, crawl, map, interact, batch-scrape, batch-crawl, download, citations, version, mcp, serve), output formats (JSON + Markdown), browser fallback, and when to prefer the MCP server over shelling out. |
 | **crawling-a-site** | Use when the user wants to follow links across a domain and capture every reachable page as Markdown. Covers `crawlberg crawl` with depth, page caps, concurrency, rate limiting, domain scoping, robots, and output selection. |
 | **scraping-html-to-markdown** | Use when the user wants a single page rendered as clean Markdown plus structured metadata. Covers `crawlberg scrape <url>`, JSON vs Markdown output, what metadata is returned, and how to handle JS-heavy pages. |
 | **mapping-urls** | Use when the user wants the list of URLs on a site rather than the page content — sitemap analysis, link planning, or seeding another tool. Covers `crawlberg map <url>` with `--limit`, `--search`, robots, output, and how it differs from a full crawl. |
@@ -52,14 +52,19 @@ Headless fallback requires Chrome/Chromium on your system. The CLI launches it o
 
 The plugin wires up the `crawlberg` MCP server via `scripts/mcp-launch.sh`, which resolves or installs a version-matched binary, then runs `crawlberg mcp` over stdio. Override binary resolution with `CRAWLBERG_LAUNCHER=auto|download`.
 
-The MCP server exposes:
+The MCP server exposes nine tools:
 
 - `scrape` — fetch and convert a single URL to Markdown or JSON.
 - `crawl` — follow links across a domain, bounded by depth and page count.
 - `map` — enumerate URLs from sitemaps and link extraction.
+- `batch_scrape` — scrape multiple URLs concurrently.
+- `batch_crawl` — crawl multiple seed URLs concurrently.
+- `download` — download a document from a URL and report its file metadata.
 - `interact` — drive a headless browser with click, type, scroll actions.
+- `generate_citations` — rewrite markdown links as numbered citations with a reference list.
+- `get_version` — report the crawlberg library version.
 
-The CLI offers the same operations plus `serve` (a Firecrawl-v1-compatible REST API server). See the `serving-the-api` skill for when to run the server instead of the CLI or MCP.
+The CLI offers the same operations as subcommands — `scrape`, `crawl`, `map`, `interact`, `batch-scrape`, `batch-crawl`, `download`, `citations`, `version` — plus `serve` (a Firecrawl-v1-compatible REST API server) and `mcp` (the stdio MCP server). See the `crawlberg` skill for the full per-subcommand flag surface, and the `serving-the-api` skill for when to run the server instead of the CLI or MCP.
 
 ## Configuration
 

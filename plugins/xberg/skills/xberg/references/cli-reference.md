@@ -14,7 +14,7 @@ uvx --from xberg-cli xberg --help
 Or download a pre-built binary from the [latest GitHub Release](https://github.com/xberg-io/xberg/releases/latest), or build from source:
 
 ```bash
-cargo install --git https://github.com/xberg-io/xberg xberg-cli
+cargo install xberg-cli
 ```
 
 ## Commands
@@ -359,8 +359,8 @@ language = "eng"
 
 # Chunking settings
 [chunking]
-max_chars = 2000
-max_overlap = 200
+max_characters = 2000
+overlap = 200
 
 # Language detection
 [language_detection]
