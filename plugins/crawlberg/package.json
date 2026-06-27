@@ -1,6 +1,6 @@
 {
   "name": "@xberg-io/opencode-crawlberg",
-  "version": "0.2.2",
+  "version": "0.1.0",
   "description": "OpenCode tools for crawling and scraping with the crawlberg CLI.",
   "keywords": [
     "crawling",

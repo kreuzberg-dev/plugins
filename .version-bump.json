@@ -57,10 +57,6 @@
       "field": "version"
     },
     {
-      "path": "plugins/xberg/package.json",
-      "field": "version"
-    },
-    {
       "path": "plugins/crawlberg/.claude-plugin/plugin.json",
       "field": "version"
     },
@@ -85,10 +81,6 @@
       "field": "version"
     },
     {
-      "path": "plugins/crawlberg/package.json",
-      "field": "version"
-    },
-    {
       "path": "plugins/html-to-markdown/.claude-plugin/plugin.json",
       "field": "version"
     },
@@ -110,10 +102,6 @@
     },
     {
       "path": "plugins/html-to-markdown/gemini-extension.json",
-      "field": "version"
-    },
-    {
-      "path": "plugins/html-to-markdown/package.json",
       "field": "version"
     },
     {
@@ -162,10 +150,6 @@
     },
     {
       "path": "plugins/tree-sitter-language-pack/gemini-extension.json",
-      "field": "version"
-    },
-    {
-      "path": "plugins/tree-sitter-language-pack/package.json",
       "field": "version"
     }
   ],
